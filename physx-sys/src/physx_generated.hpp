@@ -12539,8 +12539,8 @@ extern "C" {
 
     bool PxPoissonSampler_setSamplingRadius_mut(physx_PxPoissonSampler_Pod* self__pod, float samplingRadius) {
         physx::PxPoissonSampler* self_ = reinterpret_cast<physx::PxPoissonSampler*>(self__pod);
-        bool return_val = self_->setSamplingRadius(samplingRadius);
-        return return_val;
+        self_->setSamplingRadius(samplingRadius);
+        return true;
     }
 
     void PxPoissonSampler_addSamplesInSphere_mut(physx_PxPoissonSampler_Pod* self__pod, physx_PxVec3_Pod const* sphereCenter_pod, float sphereRadius, bool createVolumeSamples) {

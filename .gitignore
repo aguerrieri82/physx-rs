@@ -8,4 +8,5 @@ Cargo.lock
 # we use this while iterating
 ast-dump.json
 /physx-sys/src/build-win
+/physx-sys/src/build-android
 /.vs

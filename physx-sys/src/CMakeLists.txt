@@ -5,31 +5,41 @@ project(physx-sys)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(PHYSX_SDK "../../../../libs/physx-141")
+set(PHYSX_SDK_INCLUDE "${PHYSX_SDK}/include")
+	
+if (ANDROID_ABI STREQUAL  "arm64-v8a")
 
-set(PHYSX_CONFIG "vc17win64")
-set(PHYSX_BIN "win.x86_64.vc143.mt/release")
-set(PHYSX_SDK "D:/Development/Library/PhysX-104.2-physx-5.1.3/physx")
-set(PHYSX_SDK_INCLUDE "${PHYSX_SDK}/install/${PHYSX_CONFIG}/PhysX/include")
-set(PHYSX_SDK_LIB "${PHYSX_SDK}/bin/${PHYSX_BIN}")
+	set(PHYSX_SDK_LIB "${PHYSX_SDK}/bin/android-arm64/release")
+	
+	set(STRUCT_NAME "unix")
 
-message(STATUS "MY_PATH: ${PHYSX_SDK_LIB}")
+else()
 
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+	set(PHYSX_SDK_LIB "${PHYSX_SDK}/bin/win64-mt/release")
+	
+	set(STRUCT_NAME "x86_64-pc-windows-msvc")
+
+endif()
 
 set(SOURCES
     physx_api.cpp
 	structgen/structgen.cpp
 )
+	
+file(GLOB LIB_FILES 
+	"${PHYSX_SDK_LIB}/*.a"
+	"${PHYSX_SDK_LIB}/*.lib"
+	"${PHYSX_SDK_LIB}/*.so")
 
 add_library(MainLib SHARED ${SOURCES})
 
 target_include_directories(MainLib PUBLIC 
     ${PHYSX_SDK_INCLUDE}
-    ${CMAKE_CURRENT_SOURCE_DIR}/generated/x86_64-pc-windows-msvc
+    ${CMAKE_CURRENT_SOURCE_DIR}/generated/${STRUCT_NAME}
 )
-
-file(GLOB LIB_FILES "${PHYSX_SDK_LIB}/*.lib")
-
 
 target_link_libraries(MainLib PUBLIC ${LIB_FILES})
 
