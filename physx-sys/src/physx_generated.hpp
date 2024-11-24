@@ -68,9 +68,6 @@ static_assert(sizeof(physx::PxTask) == sizeof(physx_PxTask_Pod), "POD wrapper fo
 static_assert(sizeof(physx::PxLightCpuTask) == sizeof(physx_PxLightCpuTask_Pod), "POD wrapper for `physx::PxLightCpuTask` has incorrect size");
 static_assert(sizeof(physx::PxGeometry) == sizeof(physx_PxGeometry_Pod), "POD wrapper for `physx::PxGeometry` has incorrect size");
 static_assert(sizeof(physx::PxBoxGeometry) == sizeof(physx_PxBoxGeometry_Pod), "POD wrapper for `physx::PxBoxGeometry` has incorrect size");
-static_assert(sizeof(physx::PxBVHRaycastCallback) == sizeof(physx_PxBVHRaycastCallback_Pod), "POD wrapper for `physx::PxBVHRaycastCallback` has incorrect size");
-static_assert(sizeof(physx::PxBVHOverlapCallback) == sizeof(physx_PxBVHOverlapCallback_Pod), "POD wrapper for `physx::PxBVHOverlapCallback` has incorrect size");
-static_assert(sizeof(physx::PxBVHTraversalCallback) == sizeof(physx_PxBVHTraversalCallback_Pod), "POD wrapper for `physx::PxBVHTraversalCallback` has incorrect size");
 static_assert(sizeof(physx::PxBVH) == sizeof(physx_PxBVH_Pod), "POD wrapper for `physx::PxBVH` has incorrect size");
 static_assert(sizeof(physx::PxCapsuleGeometry) == sizeof(physx_PxCapsuleGeometry_Pod), "POD wrapper for `physx::PxCapsuleGeometry` has incorrect size");
 static_assert(sizeof(physx::PxHullPolygon) == sizeof(physx_PxHullPolygon_Pod), "POD wrapper for `physx::PxHullPolygon` has incorrect size");
@@ -91,8 +88,6 @@ static_assert(sizeof(physx::PxGeomOverlapHit) == sizeof(physx_PxGeomOverlapHit_P
 static_assert(sizeof(physx::PxGeomSweepHit) == sizeof(physx_PxGeomSweepHit_Pod), "POD wrapper for `physx::PxGeomSweepHit` has incorrect size");
 static_assert(sizeof(physx::PxGeomIndexPair) == sizeof(physx_PxGeomIndexPair_Pod), "POD wrapper for `physx::PxGeomIndexPair` has incorrect size");
 static_assert(sizeof(physx::PxQueryThreadContext) == sizeof(physx_PxQueryThreadContext_Pod), "POD wrapper for `physx::PxQueryThreadContext` has incorrect size");
-static_assert(sizeof(physx::PxCustomGeometryType) == sizeof(physx_PxCustomGeometryType_Pod), "POD wrapper for `physx::PxCustomGeometryType` has incorrect size");
-static_assert(sizeof(physx::PxCustomGeometryCallbacks) == sizeof(physx_PxCustomGeometryCallbacks_Pod), "POD wrapper for `physx::PxCustomGeometryCallbacks` has incorrect size");
 static_assert(sizeof(physx::PxCustomGeometry) == sizeof(physx_PxCustomGeometry_Pod), "POD wrapper for `physx::PxCustomGeometry` has incorrect size");
 static_assert(sizeof(physx::PxGeometryHolder) == sizeof(physx_PxGeometryHolder_Pod), "POD wrapper for `physx::PxGeometryHolder` has incorrect size");
 static_assert(sizeof(physx::PxGeometryQuery) == sizeof(physx_PxGeometryQuery_Pod), "POD wrapper for `physx::PxGeometryQuery` has incorrect size");
@@ -117,10 +112,7 @@ static_assert(sizeof(physx::PxCollisionTetrahedronMeshData) == sizeof(physx_PxCo
 static_assert(sizeof(physx::PxSimulationTetrahedronMeshData) == sizeof(physx_PxSimulationTetrahedronMeshData_Pod), "POD wrapper for `physx::PxSimulationTetrahedronMeshData` has incorrect size");
 static_assert(sizeof(physx::PxActor) == sizeof(physx_PxActor_Pod), "POD wrapper for `physx::PxActor` has incorrect size");
 static_assert(sizeof(physx::PxAggregate) == sizeof(physx_PxAggregate_Pod), "POD wrapper for `physx::PxAggregate` has incorrect size");
-static_assert(sizeof(physx::PxSpringModifiers) == sizeof(physx_PxSpringModifiers_Pod), "POD wrapper for `physx::PxSpringModifiers` has incorrect size");
-static_assert(sizeof(physx::PxRestitutionModifiers) == sizeof(physx_PxRestitutionModifiers_Pod), "POD wrapper for `physx::PxRestitutionModifiers` has incorrect size");
-static_assert(sizeof(physx::Px1DConstraintMods) == sizeof(physx_Px1DConstraintMods_Pod), "POD wrapper for `physx::Px1DConstraintMods` has incorrect size");
-static_assert(sizeof(physx::Px1DConstraint) == sizeof(physx_Px1DConstraint_Pod), "POD wrapper for `physx::Px1DConstraint` has incorrect size");
+//static_assert(sizeof(physx::Px1DConstraint) == sizeof(physx_Px1DConstraint_Pod), "POD wrapper for `physx::Px1DConstraint` has incorrect size");
 static_assert(sizeof(physx::PxConstraintInvMassScale) == sizeof(physx_PxConstraintInvMassScale_Pod), "POD wrapper for `physx::PxConstraintInvMassScale` has incorrect size");
 static_assert(sizeof(physx::PxConstraintVisualizer) == sizeof(physx_PxConstraintVisualizer_Pod), "POD wrapper for `physx::PxConstraintVisualizer` has incorrect size");
 static_assert(sizeof(physx::PxConstraintConnector) == sizeof(physx_PxConstraintConnector_Pod), "POD wrapper for `physx::PxConstraintConnector` has incorrect size");
@@ -306,7 +298,6 @@ static_assert(sizeof(physx::PxMassProperties) == sizeof(physx_PxMassProperties_P
 static_assert(sizeof(physx::PxRigidBodyExt) == sizeof(physx_PxRigidBodyExt_Pod), "POD wrapper for `physx::PxRigidBodyExt` has incorrect size");
 static_assert(sizeof(physx::PxShapeExt) == sizeof(physx_PxShapeExt_Pod), "POD wrapper for `physx::PxShapeExt` has incorrect size");
 static_assert(sizeof(physx::PxMeshOverlapUtil) == sizeof(physx_PxMeshOverlapUtil_Pod), "POD wrapper for `physx::PxMeshOverlapUtil` has incorrect size");
-static_assert(sizeof(physx::PxXmlMiscParameter) == sizeof(physx_PxXmlMiscParameter_Pod), "POD wrapper for `physx::PxXmlMiscParameter` has incorrect size");
 static_assert(sizeof(physx::PxSerialization) == sizeof(physx_PxSerialization_Pod), "POD wrapper for `physx::PxSerialization` has incorrect size");
 static_assert(sizeof(physx::PxDefaultCpuDispatcher) == sizeof(physx_PxDefaultCpuDispatcher_Pod), "POD wrapper for `physx::PxDefaultCpuDispatcher` has incorrect size");
 static_assert(sizeof(physx::PxStringTableExt) == sizeof(physx_PxStringTableExt_Pod), "POD wrapper for `physx::PxStringTableExt` has incorrect size");
@@ -374,7 +365,7 @@ extern "C" {
 
     void PxFoundation_setErrorLevel_mut(physx_PxFoundation_Pod* self__pod, uint32_t mask) {
         physx::PxFoundation* self_ = reinterpret_cast<physx::PxFoundation*>(self__pod);
-        self_->setErrorLevel(mask);
+        self_->setErrorLevel((PxErrorCode::Enum)mask);
     }
 
     uint32_t PxFoundation_getErrorLevel(physx_PxFoundation_Pod const* self__pod) {
@@ -3417,87 +3408,6 @@ extern "C" {
         return return_val;
     }
 
-    void PxBVHRaycastCallback_delete(physx_PxBVHRaycastCallback_Pod* self__pod) {
-        physx::PxBVHRaycastCallback* self_ = reinterpret_cast<physx::PxBVHRaycastCallback*>(self__pod);
-        delete self_;
-    }
-
-    bool PxBVHRaycastCallback_reportHit_mut(physx_PxBVHRaycastCallback_Pod* self__pod, uint32_t boundsIndex, float* distance_pod) {
-        physx::PxBVHRaycastCallback* self_ = reinterpret_cast<physx::PxBVHRaycastCallback*>(self__pod);
-        float& distance = *distance_pod;
-        bool return_val = self_->reportHit(boundsIndex, distance);
-        return return_val;
-    }
-
-    void PxBVHOverlapCallback_delete(physx_PxBVHOverlapCallback_Pod* self__pod) {
-        physx::PxBVHOverlapCallback* self_ = reinterpret_cast<physx::PxBVHOverlapCallback*>(self__pod);
-        delete self_;
-    }
-
-    bool PxBVHOverlapCallback_reportHit_mut(physx_PxBVHOverlapCallback_Pod* self__pod, uint32_t boundsIndex) {
-        physx::PxBVHOverlapCallback* self_ = reinterpret_cast<physx::PxBVHOverlapCallback*>(self__pod);
-        bool return_val = self_->reportHit(boundsIndex);
-        return return_val;
-    }
-
-    void PxBVHTraversalCallback_delete(physx_PxBVHTraversalCallback_Pod* self__pod) {
-        physx::PxBVHTraversalCallback* self_ = reinterpret_cast<physx::PxBVHTraversalCallback*>(self__pod);
-        delete self_;
-    }
-
-    bool PxBVHTraversalCallback_visitNode_mut(physx_PxBVHTraversalCallback_Pod* self__pod, physx_PxBounds3_Pod const* bounds_pod) {
-        physx::PxBVHTraversalCallback* self_ = reinterpret_cast<physx::PxBVHTraversalCallback*>(self__pod);
-        physx::PxBounds3 const& bounds = reinterpret_cast<physx::PxBounds3 const&>(*bounds_pod);
-        bool return_val = self_->visitNode(bounds);
-        return return_val;
-    }
-
-    bool PxBVHTraversalCallback_reportLeaf_mut(physx_PxBVHTraversalCallback_Pod* self__pod, uint32_t nbPrims, uint32_t const* prims) {
-        physx::PxBVHTraversalCallback* self_ = reinterpret_cast<physx::PxBVHTraversalCallback*>(self__pod);
-        bool return_val = self_->reportLeaf(nbPrims, prims);
-        return return_val;
-    }
-
-    bool PxBVH_raycast(physx_PxBVH_Pod const* self__pod, physx_PxVec3_Pod const* origin_pod, physx_PxVec3_Pod const* unitDir_pod, float maxDist, physx_PxBVHRaycastCallback_Pod* cb_pod, uint32_t queryFlags_pod) {
-        physx::PxBVH const* self_ = reinterpret_cast<physx::PxBVH const*>(self__pod);
-        physx::PxVec3 const& origin = reinterpret_cast<physx::PxVec3 const&>(*origin_pod);
-        physx::PxVec3 const& unitDir = reinterpret_cast<physx::PxVec3 const&>(*unitDir_pod);
-        physx::PxBVHRaycastCallback& cb = reinterpret_cast<physx::PxBVHRaycastCallback&>(*cb_pod);
-        auto queryFlags = physx::PxGeometryQueryFlags(queryFlags_pod);
-        bool return_val = self_->raycast(origin, unitDir, maxDist, cb, queryFlags);
-        return return_val;
-    }
-
-    bool PxBVH_sweep(physx_PxBVH_Pod const* self__pod, physx_PxGeometry_Pod const* geom_pod, physx_PxTransform_Pod const* pose_pod, physx_PxVec3_Pod const* unitDir_pod, float maxDist, physx_PxBVHRaycastCallback_Pod* cb_pod, uint32_t queryFlags_pod) {
-        physx::PxBVH const* self_ = reinterpret_cast<physx::PxBVH const*>(self__pod);
-        physx::PxGeometry const& geom = reinterpret_cast<physx::PxGeometry const&>(*geom_pod);
-        physx::PxTransform const& pose = reinterpret_cast<physx::PxTransform const&>(*pose_pod);
-        physx::PxVec3 const& unitDir = reinterpret_cast<physx::PxVec3 const&>(*unitDir_pod);
-        physx::PxBVHRaycastCallback& cb = reinterpret_cast<physx::PxBVHRaycastCallback&>(*cb_pod);
-        auto queryFlags = physx::PxGeometryQueryFlags(queryFlags_pod);
-        bool return_val = self_->sweep(geom, pose, unitDir, maxDist, cb, queryFlags);
-        return return_val;
-    }
-
-    bool PxBVH_overlap(physx_PxBVH_Pod const* self__pod, physx_PxGeometry_Pod const* geom_pod, physx_PxTransform_Pod const* pose_pod, physx_PxBVHOverlapCallback_Pod* cb_pod, uint32_t queryFlags_pod) {
-        physx::PxBVH const* self_ = reinterpret_cast<physx::PxBVH const*>(self__pod);
-        physx::PxGeometry const& geom = reinterpret_cast<physx::PxGeometry const&>(*geom_pod);
-        physx::PxTransform const& pose = reinterpret_cast<physx::PxTransform const&>(*pose_pod);
-        physx::PxBVHOverlapCallback& cb = reinterpret_cast<physx::PxBVHOverlapCallback&>(*cb_pod);
-        auto queryFlags = physx::PxGeometryQueryFlags(queryFlags_pod);
-        bool return_val = self_->overlap(geom, pose, cb, queryFlags);
-        return return_val;
-    }
-
-    bool PxBVH_cull(physx_PxBVH_Pod const* self__pod, uint32_t nbPlanes, physx_PxPlane_Pod const* planes_pod, physx_PxBVHOverlapCallback_Pod* cb_pod, uint32_t queryFlags_pod) {
-        physx::PxBVH const* self_ = reinterpret_cast<physx::PxBVH const*>(self__pod);
-        physx::PxPlane const* planes = reinterpret_cast<physx::PxPlane const*>(planes_pod);
-        physx::PxBVHOverlapCallback& cb = reinterpret_cast<physx::PxBVHOverlapCallback&>(*cb_pod);
-        auto queryFlags = physx::PxGeometryQueryFlags(queryFlags_pod);
-        bool return_val = self_->cull(nbPlanes, planes, cb, queryFlags);
-        return return_val;
-    }
-
     uint32_t PxBVH_getNbBounds(physx_PxBVH_Pod const* self__pod) {
         physx::PxBVH const* self_ = reinterpret_cast<physx::PxBVH const*>(self__pod);
         uint32_t return_val = self_->getNbBounds();
@@ -3535,12 +3445,7 @@ extern "C" {
         self_->partialRefit();
     }
 
-    bool PxBVH_traverse(physx_PxBVH_Pod const* self__pod, physx_PxBVHTraversalCallback_Pod* cb_pod) {
-        physx::PxBVH const* self_ = reinterpret_cast<physx::PxBVH const*>(self__pod);
-        physx::PxBVHTraversalCallback& cb = reinterpret_cast<physx::PxBVHTraversalCallback&>(*cb_pod);
-        bool return_val = self_->traverse(cb);
-        return return_val;
-    }
+
 
     char const* PxBVH_getConcreteTypeName(physx_PxBVH_Pod const* self__pod) {
         physx::PxBVH const* self_ = reinterpret_cast<physx::PxBVH const*>(self__pod);
@@ -3880,99 +3785,7 @@ extern "C" {
         return return_val_pod;
     }
 
-    uint32_t phys_PxCustomGeometry_getUniqueID() {
-        uint32_t return_val = PxCustomGeometry_getUniqueID();
-        return return_val;
-    }
 
-    physx_PxCustomGeometryType_Pod PxCustomGeometryType_new() {
-        PxCustomGeometryType return_val;
-        physx_PxCustomGeometryType_Pod return_val_pod;
-        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
-        return return_val_pod;
-    }
-
-    physx_PxCustomGeometryType_Pod PxCustomGeometryType_INVALID() {
-        physx::PxCustomGeometryType return_val = PxCustomGeometryType::INVALID();
-        physx_PxCustomGeometryType_Pod return_val_pod;
-        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
-        return return_val_pod;
-    }
-
-    physx_PxCustomGeometryType_Pod PxCustomGeometryCallbacks_getCustomType(physx_PxCustomGeometryCallbacks_Pod const* self__pod) {
-        physx::PxCustomGeometryCallbacks const* self_ = reinterpret_cast<physx::PxCustomGeometryCallbacks const*>(self__pod);
-        physx::PxCustomGeometryType return_val = self_->getCustomType();
-        physx_PxCustomGeometryType_Pod return_val_pod;
-        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
-        return return_val_pod;
-    }
-
-    physx_PxBounds3_Pod PxCustomGeometryCallbacks_getLocalBounds(physx_PxCustomGeometryCallbacks_Pod const* self__pod, physx_PxGeometry_Pod const* geometry_pod) {
-        physx::PxCustomGeometryCallbacks const* self_ = reinterpret_cast<physx::PxCustomGeometryCallbacks const*>(self__pod);
-        physx::PxGeometry const& geometry = reinterpret_cast<physx::PxGeometry const&>(*geometry_pod);
-        physx::PxBounds3 return_val = self_->getLocalBounds(geometry);
-        physx_PxBounds3_Pod return_val_pod;
-        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
-        return return_val_pod;
-    }
-
-    uint32_t PxCustomGeometryCallbacks_raycast(physx_PxCustomGeometryCallbacks_Pod const* self__pod, physx_PxVec3_Pod const* origin_pod, physx_PxVec3_Pod const* unitDir_pod, physx_PxGeometry_Pod const* geom_pod, physx_PxTransform_Pod const* pose_pod, float maxDist, uint16_t hitFlags_pod, uint32_t maxHits, physx_PxGeomRaycastHit_Pod* rayHits_pod, uint32_t stride, physx_PxQueryThreadContext_Pod* threadContext_pod) {
-        physx::PxCustomGeometryCallbacks const* self_ = reinterpret_cast<physx::PxCustomGeometryCallbacks const*>(self__pod);
-        physx::PxVec3 const& origin = reinterpret_cast<physx::PxVec3 const&>(*origin_pod);
-        physx::PxVec3 const& unitDir = reinterpret_cast<physx::PxVec3 const&>(*unitDir_pod);
-        physx::PxGeometry const& geom = reinterpret_cast<physx::PxGeometry const&>(*geom_pod);
-        physx::PxTransform const& pose = reinterpret_cast<physx::PxTransform const&>(*pose_pod);
-        auto hitFlags = physx::PxHitFlags(hitFlags_pod);
-        physx::PxGeomRaycastHit* rayHits = reinterpret_cast<physx::PxGeomRaycastHit*>(rayHits_pod);
-        physx::PxQueryThreadContext* threadContext = reinterpret_cast<physx::PxQueryThreadContext*>(threadContext_pod);
-        uint32_t return_val = self_->raycast(origin, unitDir, geom, pose, maxDist, hitFlags, maxHits, rayHits, stride, threadContext);
-        return return_val;
-    }
-
-    bool PxCustomGeometryCallbacks_overlap(physx_PxCustomGeometryCallbacks_Pod const* self__pod, physx_PxGeometry_Pod const* geom0_pod, physx_PxTransform_Pod const* pose0_pod, physx_PxGeometry_Pod const* geom1_pod, physx_PxTransform_Pod const* pose1_pod, physx_PxQueryThreadContext_Pod* threadContext_pod) {
-        physx::PxCustomGeometryCallbacks const* self_ = reinterpret_cast<physx::PxCustomGeometryCallbacks const*>(self__pod);
-        physx::PxGeometry const& geom0 = reinterpret_cast<physx::PxGeometry const&>(*geom0_pod);
-        physx::PxTransform const& pose0 = reinterpret_cast<physx::PxTransform const&>(*pose0_pod);
-        physx::PxGeometry const& geom1 = reinterpret_cast<physx::PxGeometry const&>(*geom1_pod);
-        physx::PxTransform const& pose1 = reinterpret_cast<physx::PxTransform const&>(*pose1_pod);
-        physx::PxQueryThreadContext* threadContext = reinterpret_cast<physx::PxQueryThreadContext*>(threadContext_pod);
-        bool return_val = self_->overlap(geom0, pose0, geom1, pose1, threadContext);
-        return return_val;
-    }
-
-    bool PxCustomGeometryCallbacks_sweep(physx_PxCustomGeometryCallbacks_Pod const* self__pod, physx_PxVec3_Pod const* unitDir_pod, float maxDist, physx_PxGeometry_Pod const* geom0_pod, physx_PxTransform_Pod const* pose0_pod, physx_PxGeometry_Pod const* geom1_pod, physx_PxTransform_Pod const* pose1_pod, physx_PxGeomSweepHit_Pod* sweepHit_pod, uint16_t hitFlags_pod, float inflation, physx_PxQueryThreadContext_Pod* threadContext_pod) {
-        physx::PxCustomGeometryCallbacks const* self_ = reinterpret_cast<physx::PxCustomGeometryCallbacks const*>(self__pod);
-        physx::PxVec3 const& unitDir = reinterpret_cast<physx::PxVec3 const&>(*unitDir_pod);
-        physx::PxGeometry const& geom0 = reinterpret_cast<physx::PxGeometry const&>(*geom0_pod);
-        physx::PxTransform const& pose0 = reinterpret_cast<physx::PxTransform const&>(*pose0_pod);
-        physx::PxGeometry const& geom1 = reinterpret_cast<physx::PxGeometry const&>(*geom1_pod);
-        physx::PxTransform const& pose1 = reinterpret_cast<physx::PxTransform const&>(*pose1_pod);
-        physx::PxGeomSweepHit& sweepHit = reinterpret_cast<physx::PxGeomSweepHit&>(*sweepHit_pod);
-        auto hitFlags = physx::PxHitFlags(hitFlags_pod);
-        physx::PxQueryThreadContext* threadContext = reinterpret_cast<physx::PxQueryThreadContext*>(threadContext_pod);
-        bool return_val = self_->sweep(unitDir, maxDist, geom0, pose0, geom1, pose1, sweepHit, hitFlags, inflation, threadContext);
-        return return_val;
-    }
-
-    void PxCustomGeometryCallbacks_computeMassProperties(physx_PxCustomGeometryCallbacks_Pod const* self__pod, physx_PxGeometry_Pod const* geometry_pod, physx_PxMassProperties_Pod* massProperties_pod) {
-        physx::PxCustomGeometryCallbacks const* self_ = reinterpret_cast<physx::PxCustomGeometryCallbacks const*>(self__pod);
-        physx::PxGeometry const& geometry = reinterpret_cast<physx::PxGeometry const&>(*geometry_pod);
-        physx::PxMassProperties& massProperties = reinterpret_cast<physx::PxMassProperties&>(*massProperties_pod);
-        self_->computeMassProperties(geometry, massProperties);
-    }
-
-    bool PxCustomGeometryCallbacks_usePersistentContactManifold(physx_PxCustomGeometryCallbacks_Pod const* self__pod, physx_PxGeometry_Pod const* geometry_pod, float* breakingThreshold_pod) {
-        physx::PxCustomGeometryCallbacks const* self_ = reinterpret_cast<physx::PxCustomGeometryCallbacks const*>(self__pod);
-        physx::PxGeometry const& geometry = reinterpret_cast<physx::PxGeometry const&>(*geometry_pod);
-        float& breakingThreshold = *breakingThreshold_pod;
-        bool return_val = self_->usePersistentContactManifold(geometry, breakingThreshold);
-        return return_val;
-    }
-
-    void PxCustomGeometryCallbacks_delete(physx_PxCustomGeometryCallbacks_Pod* self__pod) {
-        physx::PxCustomGeometryCallbacks* self_ = reinterpret_cast<physx::PxCustomGeometryCallbacks*>(self__pod);
-        delete self_;
-    }
 
     physx_PxCustomGeometry_Pod PxCustomGeometry_new() {
         PxCustomGeometry return_val;
@@ -3981,13 +3794,7 @@ extern "C" {
         return return_val_pod;
     }
 
-    physx_PxCustomGeometry_Pod PxCustomGeometry_new_1(physx_PxCustomGeometryCallbacks_Pod* _callbacks_pod) {
-        physx::PxCustomGeometryCallbacks& _callbacks = reinterpret_cast<physx::PxCustomGeometryCallbacks&>(*_callbacks_pod);
-        PxCustomGeometry return_val(_callbacks);
-        physx_PxCustomGeometry_Pod return_val_pod;
-        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
-        return return_val_pod;
-    }
+
 
     bool PxCustomGeometry_isValid(physx_PxCustomGeometry_Pod const* self__pod) {
         physx::PxCustomGeometry const* self_ = reinterpret_cast<physx::PxCustomGeometry const*>(self__pod);
@@ -3995,13 +3802,6 @@ extern "C" {
         return return_val;
     }
 
-    physx_PxCustomGeometryType_Pod PxCustomGeometry_getCustomType(physx_PxCustomGeometry_Pod const* self__pod) {
-        physx::PxCustomGeometry const* self_ = reinterpret_cast<physx::PxCustomGeometry const*>(self__pod);
-        physx::PxCustomGeometryType return_val = self_->getCustomType();
-        physx_PxCustomGeometryType_Pod return_val_pod;
-        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
-        return return_val_pod;
-    }
 
     int32_t PxGeometryHolder_getType(physx_PxGeometryHolder_Pod const* self__pod) {
         physx::PxGeometryHolder const* self_ = reinterpret_cast<physx::PxGeometryHolder const*>(self__pod);
@@ -12304,22 +12104,6 @@ extern "C" {
         return return_val;
     }
 
-    physx_PxXmlMiscParameter_Pod PxXmlMiscParameter_new() {
-        PxXmlMiscParameter return_val;
-        physx_PxXmlMiscParameter_Pod return_val_pod;
-        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
-        return return_val_pod;
-    }
-
-    physx_PxXmlMiscParameter_Pod PxXmlMiscParameter_new_1(physx_PxVec3_Pod* inUpVector_pod, physx_PxTolerancesScale_Pod inScale_pod) {
-        physx::PxVec3& inUpVector = reinterpret_cast<physx::PxVec3&>(*inUpVector_pod);
-        physx::PxTolerancesScale inScale;
-        memcpy(&inScale, &inScale_pod, sizeof(inScale));
-        PxXmlMiscParameter return_val(inUpVector, inScale);
-        physx_PxXmlMiscParameter_Pod return_val_pod;
-        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
-        return return_val_pod;
-    }
 
     bool PxSerialization_isSerializable(physx_PxCollection_Pod* collection_pod, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCollection_Pod const* externalReferences_pod) {
         physx::PxCollection& collection = reinterpret_cast<physx::PxCollection&>(*collection_pod);
@@ -12341,17 +12125,7 @@ extern "C" {
         PxSerialization::createSerialObjectIds(collection, base);
     }
 
-    physx_PxCollection_Pod* PxSerialization_createCollectionFromXml(physx_PxInputData_Pod* inputData_pod, physx_PxCooking_Pod* cooking_pod, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCollection_Pod const* externalRefs_pod, physx_PxStringTable_Pod* stringTable_pod, physx_PxXmlMiscParameter_Pod* outArgs_pod) {
-        physx::PxInputData& inputData = reinterpret_cast<physx::PxInputData&>(*inputData_pod);
-        physx::PxCooking& cooking = reinterpret_cast<physx::PxCooking&>(*cooking_pod);
-        physx::PxSerializationRegistry& sr = reinterpret_cast<physx::PxSerializationRegistry&>(*sr_pod);
-        physx::PxCollection const* externalRefs = reinterpret_cast<physx::PxCollection const*>(externalRefs_pod);
-        physx::PxStringTable* stringTable = reinterpret_cast<physx::PxStringTable*>(stringTable_pod);
-        physx::PxXmlMiscParameter* outArgs = reinterpret_cast<physx::PxXmlMiscParameter*>(outArgs_pod);
-        physx::PxCollection* return_val = PxSerialization::createCollectionFromXml(inputData, cooking, sr, externalRefs, stringTable, outArgs);
-        auto return_val_pod = reinterpret_cast<physx_PxCollection_Pod*>(return_val);
-        return return_val_pod;
-    }
+
 
     physx_PxCollection_Pod* PxSerialization_createCollectionFromBinary(void* memBlock, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCollection_Pod const* externalRefs_pod) {
         physx::PxSerializationRegistry& sr = reinterpret_cast<physx::PxSerializationRegistry&>(*sr_pod);
@@ -12359,17 +12133,6 @@ extern "C" {
         physx::PxCollection* return_val = PxSerialization::createCollectionFromBinary(memBlock, sr, externalRefs);
         auto return_val_pod = reinterpret_cast<physx_PxCollection_Pod*>(return_val);
         return return_val_pod;
-    }
-
-    bool PxSerialization_serializeCollectionToXml(physx_PxOutputStream_Pod* outputStream_pod, physx_PxCollection_Pod* collection_pod, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCooking_Pod* cooking_pod, physx_PxCollection_Pod const* externalRefs_pod, physx_PxXmlMiscParameter_Pod* inArgs_pod) {
-        physx::PxOutputStream& outputStream = reinterpret_cast<physx::PxOutputStream&>(*outputStream_pod);
-        physx::PxCollection& collection = reinterpret_cast<physx::PxCollection&>(*collection_pod);
-        physx::PxSerializationRegistry& sr = reinterpret_cast<physx::PxSerializationRegistry&>(*sr_pod);
-        physx::PxCooking* cooking = reinterpret_cast<physx::PxCooking*>(cooking_pod);
-        physx::PxCollection const* externalRefs = reinterpret_cast<physx::PxCollection const*>(externalRefs_pod);
-        physx::PxXmlMiscParameter* inArgs = reinterpret_cast<physx::PxXmlMiscParameter*>(inArgs_pod);
-        bool return_val = PxSerialization::serializeCollectionToXml(outputStream, collection, sr, cooking, externalRefs, inArgs);
-        return return_val;
     }
 
     bool PxSerialization_serializeCollectionToBinary(physx_PxOutputStream_Pod* outputStream_pod, physx_PxCollection_Pod* collection_pod, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCollection_Pod const* externalRefs_pod, bool exportNames) {
