@@ -17,14 +17,16 @@ jobs:
       - name: Install clang
         run: sudo apt-get update && sudo apt-get install -y clang
       - name: Patch generator for PhysX 5.9
-        run: python3 -c "from pathlib import Path; p=Path('physx-sys/pxbind/src/consumer.rs'); s=p.read_text(); old='        if let Some(bi) = Self::parse_builtin(type_str) {\\n            return Ok(QualType::Builtin(bi));\\n        }\\n'; new=old+'\\n        if type_str == \"__va_list_tag\" {\\n            return Ok(QualType::Builtin(Builtin::Void));\\n        }\\n'; assert old in s; p.write_text(s.replace(old,new,1))"
+        run: |
+          python3 -c "from pathlib import Path; p=Path('physx-sys/pxbind/src/consumer.rs'); s=p.read_text(); old='        if let Some(bi) = Self::parse_builtin(type_str) {\\n            return Ok(QualType::Builtin(bi));\\n        }\\n'; new=old+'\\n        if type_str == \"__va_list_tag\" {\\n            return Ok(QualType::Builtin(Builtin::Void));\\n        }\\n'; assert old in s; p.write_text(s.replace(old,new,1))"
+          python3 -c "from pathlib import Path; p=Path('physx-sys/pxbind/src/consumer/record.rs'); s=p.read_text(); old='        rec.bases.iter().filter_map(|base| {\\n            let Some(base_name) = base.kind.qual_type.strip_prefix(\"physx::\") else {'; new='        rec.bases.iter().filter_map(|base| {\\n            if base.kind.qual_type == \"physx::PxVec3\" {\\n                return None;\\n            }\\n\\n            let Some(base_name) = base.kind.qual_type.strip_prefix(\"physx::\") else {'; assert old in s; s=s.replace(old,new,1); old2='        let mut fields = Vec::new();\\n        for base_binding in self.iter_bases(rec) {'; new2='        let mut fields = Vec::new();\\n        if rec.bases.iter().any(|base| base.kind.qual_type == \"physx::PxVec3\") {\\n            for name in [\"x\", \"y\", \"z\"] {\\n                fields.push(FieldBinding {\\n                    name,\\n                    kind: QualType::Builtin(Builtin::Float),\\n                    is_public: true,\\n                    is_reference: false,\\n                });\\n            }\\n        }\\n        for base_binding in self.iter_bases(rec) {'; assert old2 in s; p.write_text(s.replace(old2,new2,1))"
       - name: Regenerate bindings
         run: |
           rm -f physx-sys/pxbind/ast-dump.json
           cargo run --manifest-path physx-sys/pxbind/Cargo.toml
       - name: Show generated diff
         if: always()
-        run: git status --short && git diff -- physx-sys/pxbind/src/consumer.rs physx-sys/src/physx_generated.hpp physx-sys/src/physx_generated.rs physx-sys/src/structgen/structgen.cpp
+        run: git status --short && git diff -- physx-sys/pxbind/src/consumer.rs physx-sys/pxbind/src/consumer/record.rs physx-sys/src/physx_generated.hpp physx-sys/src/physx_generated.rs physx-sys/src/structgen/structgen.cpp
       - name: Build pxbind
         if: success()
         run: cargo check --manifest-path physx-sys/pxbind/Cargo.toml
@@ -37,6 +39,7 @@ jobs:
           name: physx59-generated
           path: |
             physx-sys/pxbind/src/consumer.rs
+            physx-sys/pxbind/src/consumer/record.rs
             physx-sys/src/physx_generated.hpp
             physx-sys/src/physx_generated.rs
             physx-sys/src/structgen/structgen.cpp
