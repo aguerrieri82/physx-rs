@@ -16,9 +16,9 @@ if (ANDROID_ABI STREQUAL  "arm64-v8a")
 
 else()
 
-	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
 
-	set(PHYSX_SDK_LIB "${PHYSX_SDK}/bin/win64-mt/release")
+	set(PHYSX_SDK_LIB "${PHYSX_SDK}/bin/win-x64/mt/release")
 	
 	set(STRUCT_NAME "x86_64-pc-windows-msvc")
 
