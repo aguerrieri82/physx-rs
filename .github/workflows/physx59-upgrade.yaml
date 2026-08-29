@@ -16,13 +16,39 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - name: Install clang
         run: sudo apt-get update && sudo apt-get install -y clang
+      - name: Patch generator for PhysX 5.9
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('physx-sys/pxbind/src/consumer.rs')
+          s = p.read_text()
+          old = '''        // Builtin types are the most common, we already handle the common typedefs as well
+        if let Some(bi) = Self::parse_builtin(type_str) {
+            return Ok(QualType::Builtin(bi));
+        }
+'''
+          new = '''        // Builtin types are the most common, we already handle the common typedefs as well
+        if let Some(bi) = Self::parse_builtin(type_str) {
+            return Ok(QualType::Builtin(bi));
+        }
+
+        // Clang exposes va_list's internal pointee type in newer PhysX headers.
+        // It is ABI-opaque to the generated bindings and is only used through a pointer.
+        if type_str == "__va_list_tag" {
+            return Ok(QualType::Builtin(Builtin::Void));
+        }
+'''
+          if old not in s:
+              raise SystemExit('consumer.rs patch anchor not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
       - name: Regenerate bindings
         run: |
           rm -f physx-sys/pxbind/ast-dump.json
           cargo run --manifest-path physx-sys/pxbind/Cargo.toml
       - name: Show generated diff
         if: always()
-        run: git status --short && git diff -- physx-sys/src/physx_generated.hpp physx-sys/src/physx_generated.rs physx-sys/src/structgen/structgen.cpp
+        run: git status --short && git diff -- physx-sys/pxbind/src physx-sys/src/physx_generated.hpp physx-sys/src/physx_generated.rs physx-sys/src/structgen/structgen.cpp
       - name: Build pxbind
         if: success()
         run: cargo check --manifest-path physx-sys/pxbind/Cargo.toml
@@ -34,6 +60,7 @@ jobs:
         with:
           name: physx59-generated
           path: |
+            physx-sys/pxbind/src/consumer.rs
             physx-sys/src/physx_generated.hpp
             physx-sys/src/physx_generated.rs
             physx-sys/src/structgen/structgen.cpp
