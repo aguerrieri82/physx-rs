@@ -106,7 +106,7 @@ impl<'ast> crate::consumer::FlagsBinding<'ast> {
             // combinations of flags, reconstruct the bitflags to be
             // easier to read
             let val = var.value as u64;
-            if val & (val - 1) == 0 {
+            if val.is_power_of_two() {
                 writes!(w, "1 << {}", val.ilog2());
             } else {
                 let mut is_combo = false;
@@ -117,7 +117,7 @@ impl<'ast> crate::consumer::FlagsBinding<'ast> {
                     .iter()
                     .filter_map(|var| {
                         let prev = var.value as u64;
-                        (prev & (prev - 1) == 0 && (prev & val) != 0).then_some(var.name)
+                        (prev.is_power_of_two() && (prev & val) != 0).then_some(var.name)
                     })
                     .enumerate()
                 {

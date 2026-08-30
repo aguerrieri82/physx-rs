@@ -1,6 +1,281 @@
 using namespace physx;
 #include "structgen_out.hpp"
 
+static_assert(sizeof(physx::PxAllocator) == sizeof(physx_PxAllocator_Pod), "POD wrapper for `physx::PxAllocator` has incorrect size");
+static_assert(sizeof(physx::PxRawAllocator) == sizeof(physx_PxRawAllocator_Pod), "POD wrapper for `physx::PxRawAllocator` has incorrect size");
+static_assert(sizeof(physx::PxUserAllocated) == sizeof(physx_PxUserAllocated_Pod), "POD wrapper for `physx::PxUserAllocated` has incorrect size");
+static_assert(sizeof(physx::PxTempAllocator) == sizeof(physx_PxTempAllocator_Pod), "POD wrapper for `physx::PxTempAllocator` has incorrect size");
+static_assert(sizeof(physx::PxBitAndByte) == sizeof(physx_PxBitAndByte_Pod), "POD wrapper for `physx::PxBitAndByte` has incorrect size");
+static_assert(sizeof(physx::PxBitMap) == sizeof(physx_PxBitMap_Pod), "POD wrapper for `physx::PxBitMap` has incorrect size");
+static_assert(sizeof(physx::PxVec3Padded) == sizeof(physx_PxVec3Padded_Pod), "POD wrapper for `physx::PxVec3Padded` has incorrect size");
+static_assert(sizeof(physx::PxTransformPadded) == sizeof(physx_PxTransformPadded_Pod), "POD wrapper for `physx::PxTransformPadded` has incorrect size");
+static_assert(sizeof(physx::PxBounds3) == sizeof(physx_PxBounds3_Pod), "POD wrapper for `physx::PxBounds3` has incorrect size");
+static_assert(sizeof(physx::PxBroadcastingErrorCallback) == sizeof(physx_PxBroadcastingErrorCallback_Pod), "POD wrapper for `physx::PxBroadcastingErrorCallback` has incorrect size");
+static_assert(sizeof(physx::PxFPUGuard) == sizeof(physx_PxFPUGuard_Pod), "POD wrapper for `physx::PxFPUGuard` has incorrect size");
+static_assert(sizeof(physx::PxSIMDGuard) == sizeof(physx_PxSIMDGuard_Pod), "POD wrapper for `physx::PxSIMDGuard` has incorrect size");
+static_assert(sizeof(physx::PxPlane) == sizeof(physx_PxPlane_Pod), "POD wrapper for `physx::PxPlane` has incorrect size");
+static_assert(sizeof(physx::Interpolation) == sizeof(physx_Interpolation_Pod), "POD wrapper for `physx::Interpolation` has incorrect size");
+static_assert(sizeof(physx::PxMutexImpl) == sizeof(physx_PxMutexImpl_Pod), "POD wrapper for `physx::PxMutexImpl` has incorrect size");
+static_assert(sizeof(physx::PxReadWriteLock) == sizeof(physx_PxReadWriteLock_Pod), "POD wrapper for `physx::PxReadWriteLock` has incorrect size");
+static_assert(sizeof(physx::PxProfileScoped) == sizeof(physx_PxProfileScoped_Pod), "POD wrapper for `physx::PxProfileScoped` has incorrect size");
+static_assert(sizeof(physx::PxSListEntry) == sizeof(physx_PxSListEntry_Pod), "POD wrapper for `physx::PxSListEntry` has incorrect size");
+static_assert(sizeof(physx::PxSListImpl) == sizeof(physx_PxSListImpl_Pod), "POD wrapper for `physx::PxSListImpl` has incorrect size");
+static_assert(sizeof(physx::PxSyncImpl) == sizeof(physx_PxSyncImpl_Pod), "POD wrapper for `physx::PxSyncImpl` has incorrect size");
+static_assert(sizeof(physx::PxThreadImpl) == sizeof(physx_PxThreadImpl_Pod), "POD wrapper for `physx::PxThreadImpl` has incorrect size");
+static_assert(sizeof(physx::PxCounterFrequencyToTensOfNanos) == sizeof(physx_PxCounterFrequencyToTensOfNanos_Pod), "POD wrapper for `physx::PxCounterFrequencyToTensOfNanos` has incorrect size");
+static_assert(sizeof(physx::PxTime) == sizeof(physx_PxTime_Pod), "POD wrapper for `physx::PxTime` has incorrect size");
+static_assert(sizeof(physx::PxBoundedData) == sizeof(physx_PxBoundedData_Pod), "POD wrapper for `physx::PxBoundedData` has incorrect size");
+static_assert(sizeof(physx::PxDebugPoint) == sizeof(physx_PxDebugPoint_Pod), "POD wrapper for `physx::PxDebugPoint` has incorrect size");
+static_assert(sizeof(physx::PxDebugLine) == sizeof(physx_PxDebugLine_Pod), "POD wrapper for `physx::PxDebugLine` has incorrect size");
+static_assert(sizeof(physx::PxDebugTriangle) == sizeof(physx_PxDebugTriangle_Pod), "POD wrapper for `physx::PxDebugTriangle` has incorrect size");
+static_assert(sizeof(physx::PxDebugText) == sizeof(physx_PxDebugText_Pod), "POD wrapper for `physx::PxDebugText` has incorrect size");
+static_assert(sizeof(physx::PxTolerancesScale) == sizeof(physx_PxTolerancesScale_Pod), "POD wrapper for `physx::PxTolerancesScale` has incorrect size");
+static_assert(sizeof(physx::PxGeometry) == sizeof(physx_PxGeometry_Pod), "POD wrapper for `physx::PxGeometry` has incorrect size");
+static_assert(sizeof(physx::PxBoxGeometry) == sizeof(physx_PxBoxGeometry_Pod), "POD wrapper for `physx::PxBoxGeometry` has incorrect size");
+static_assert(sizeof(physx::PxCapsuleGeometry) == sizeof(physx_PxCapsuleGeometry_Pod), "POD wrapper for `physx::PxCapsuleGeometry` has incorrect size");
+static_assert(sizeof(physx::PxHullPolygon) == sizeof(physx_PxHullPolygon_Pod), "POD wrapper for `physx::PxHullPolygon` has incorrect size");
+static_assert(sizeof(physx::PxMeshScale) == sizeof(physx_PxMeshScale_Pod), "POD wrapper for `physx::PxMeshScale` has incorrect size");
+static_assert(sizeof(physx::PxConvexMeshGeometry) == sizeof(physx_PxConvexMeshGeometry_Pod), "POD wrapper for `physx::PxConvexMeshGeometry` has incorrect size");
+static_assert(sizeof(physx::PxSphereGeometry) == sizeof(physx_PxSphereGeometry_Pod), "POD wrapper for `physx::PxSphereGeometry` has incorrect size");
+static_assert(sizeof(physx::PxPlaneGeometry) == sizeof(physx_PxPlaneGeometry_Pod), "POD wrapper for `physx::PxPlaneGeometry` has incorrect size");
+static_assert(sizeof(physx::PxTriangleMeshGeometry) == sizeof(physx_PxTriangleMeshGeometry_Pod), "POD wrapper for `physx::PxTriangleMeshGeometry` has incorrect size");
+static_assert(sizeof(physx::PxHeightFieldGeometry) == sizeof(physx_PxHeightFieldGeometry_Pod), "POD wrapper for `physx::PxHeightFieldGeometry` has incorrect size");
+static_assert(sizeof(physx::PxFilterData) == sizeof(physx_PxFilterData_Pod), "POD wrapper for `physx::PxFilterData` has incorrect size");
+static_assert(sizeof(physx::PxParticleSystemGeometry) == sizeof(physx_PxParticleSystemGeometry_Pod), "POD wrapper for `physx::PxParticleSystemGeometry` has incorrect size");
+static_assert(sizeof(physx::PxTetrahedronMeshGeometry) == sizeof(physx_PxTetrahedronMeshGeometry_Pod), "POD wrapper for `physx::PxTetrahedronMeshGeometry` has incorrect size");
+static_assert(sizeof(physx::PxQueryHit) == sizeof(physx_PxQueryHit_Pod), "POD wrapper for `physx::PxQueryHit` has incorrect size");
+static_assert(sizeof(physx::PxLocationHit) == sizeof(physx_PxLocationHit_Pod), "POD wrapper for `physx::PxLocationHit` has incorrect size");
+static_assert(sizeof(physx::PxGeomRaycastHit) == sizeof(physx_PxGeomRaycastHit_Pod), "POD wrapper for `physx::PxGeomRaycastHit` has incorrect size");
+static_assert(sizeof(physx::PxGeomOverlapHit) == sizeof(physx_PxGeomOverlapHit_Pod), "POD wrapper for `physx::PxGeomOverlapHit` has incorrect size");
+static_assert(sizeof(physx::PxGeomSweepHit) == sizeof(physx_PxGeomSweepHit_Pod), "POD wrapper for `physx::PxGeomSweepHit` has incorrect size");
+static_assert(sizeof(physx::PxGeomIndexPair) == sizeof(physx_PxGeomIndexPair_Pod), "POD wrapper for `physx::PxGeomIndexPair` has incorrect size");
+static_assert(sizeof(physx::PxGeomIndexClosePair) == sizeof(physx_PxGeomIndexClosePair_Pod), "POD wrapper for `physx::PxGeomIndexClosePair` has incorrect size");
+static_assert(sizeof(physx::PxQueryThreadContext) == sizeof(physx_PxQueryThreadContext_Pod), "POD wrapper for `physx::PxQueryThreadContext` has incorrect size");
+static_assert(sizeof(physx::PxCustomGeometry) == sizeof(physx_PxCustomGeometry_Pod), "POD wrapper for `physx::PxCustomGeometry` has incorrect size");
+static_assert(sizeof(physx::PxConvexCoreGeometry) == sizeof(physx_PxConvexCoreGeometry_Pod), "POD wrapper for `physx::PxConvexCoreGeometry` has incorrect size");
+static_assert(sizeof(physx::PxGeometryHolder) == sizeof(physx_PxGeometryHolder_Pod), "POD wrapper for `physx::PxGeometryHolder` has incorrect size");
+static_assert(sizeof(physx::PxGeometryQuery) == sizeof(physx_PxGeometryQuery_Pod), "POD wrapper for `physx::PxGeometryQuery` has incorrect size");
+static_assert(sizeof(physx::PxHeightFieldSample) == sizeof(physx_PxHeightFieldSample_Pod), "POD wrapper for `physx::PxHeightFieldSample` has incorrect size");
+static_assert(sizeof(physx::PxHeightFieldDesc) == sizeof(physx_PxHeightFieldDesc_Pod), "POD wrapper for `physx::PxHeightFieldDesc` has incorrect size");
+static_assert(sizeof(physx::PxMeshQuery) == sizeof(physx_PxMeshQuery_Pod), "POD wrapper for `physx::PxMeshQuery` has incorrect size");
+static_assert(sizeof(physx::PxSimpleTriangleMesh) == sizeof(physx_PxSimpleTriangleMesh_Pod), "POD wrapper for `physx::PxSimpleTriangleMesh` has incorrect size");
+static_assert(sizeof(physx::PxTriangle) == sizeof(physx_PxTriangle_Pod), "POD wrapper for `physx::PxTriangle` has incorrect size");
+static_assert(sizeof(physx::PxTrianglePadded) == sizeof(physx_PxTrianglePadded_Pod), "POD wrapper for `physx::PxTrianglePadded` has incorrect size");
+static_assert(sizeof(physx::PxTetrahedron) == sizeof(physx_PxTetrahedron_Pod), "POD wrapper for `physx::PxTetrahedron` has incorrect size");
+static_assert(sizeof(physx::PxDeformableVolumeCollisionData) == sizeof(physx_PxDeformableVolumeCollisionData_Pod), "POD wrapper for `physx::PxDeformableVolumeCollisionData` has incorrect size");
+static_assert(sizeof(physx::PxTetrahedronMeshData) == sizeof(physx_PxTetrahedronMeshData_Pod), "POD wrapper for `physx::PxTetrahedronMeshData` has incorrect size");
+static_assert(sizeof(physx::PxDeformableVolumeSimulationData) == sizeof(physx_PxDeformableVolumeSimulationData_Pod), "POD wrapper for `physx::PxDeformableVolumeSimulationData` has incorrect size");
+static_assert(sizeof(physx::Px1DConstraintFlag) == sizeof(physx_Px1DConstraintFlag_Pod), "POD wrapper for `physx::Px1DConstraintFlag` has incorrect size");
+static_assert(sizeof(physx::Px1DConstraint) == sizeof(physx_Px1DConstraint_Pod), "POD wrapper for `physx::Px1DConstraint` has incorrect size");
+static_assert(sizeof(physx::PxConstraintInvMassScale) == sizeof(physx_PxConstraintInvMassScale_Pod), "POD wrapper for `physx::PxConstraintInvMassScale` has incorrect size");
+static_assert(sizeof(physx::PxContactPoint) == sizeof(physx_PxContactPoint_Pod), "POD wrapper for `physx::PxContactPoint` has incorrect size");
+static_assert(sizeof(physx::PxSolverBody) == sizeof(physx_PxSolverBody_Pod), "POD wrapper for `physx::PxSolverBody` has incorrect size");
+static_assert(sizeof(physx::PxSolverBodyData) == sizeof(physx_PxSolverBodyData_Pod), "POD wrapper for `physx::PxSolverBodyData` has incorrect size");
+static_assert(sizeof(physx::PxConstraintBatchHeader) == sizeof(physx_PxConstraintBatchHeader_Pod), "POD wrapper for `physx::PxConstraintBatchHeader` has incorrect size");
+static_assert(sizeof(physx::PxSolverConstraintDesc) == sizeof(physx_PxSolverConstraintDesc_Pod), "POD wrapper for `physx::PxSolverConstraintDesc` has incorrect size");
+static_assert(sizeof(physx::PxSolverConstraintPrepDescBase) == sizeof(physx_PxSolverConstraintPrepDescBase_Pod), "POD wrapper for `physx::PxSolverConstraintPrepDescBase` has incorrect size");
+static_assert(sizeof(physx::PxSolverConstraintPrepDesc) == sizeof(physx_PxSolverConstraintPrepDesc_Pod), "POD wrapper for `physx::PxSolverConstraintPrepDesc` has incorrect size");
+static_assert(sizeof(physx::PxSolverContactDesc) == sizeof(physx_PxSolverContactDesc_Pod), "POD wrapper for `physx::PxSolverContactDesc` has incorrect size");
+static_assert(sizeof(physx::PxArticulationLimit) == sizeof(physx_PxArticulationLimit_Pod), "POD wrapper for `physx::PxArticulationLimit` has incorrect size");
+static_assert(sizeof(physx::PxPerformanceEnvelope) == sizeof(physx_PxPerformanceEnvelope_Pod), "POD wrapper for `physx::PxPerformanceEnvelope` has incorrect size");
+static_assert(sizeof(physx::PxJointFrictionParams) == sizeof(physx_PxJointFrictionParams_Pod), "POD wrapper for `physx::PxJointFrictionParams` has incorrect size");
+static_assert(sizeof(physx::PxArticulationDrive) == sizeof(physx_PxArticulationDrive_Pod), "POD wrapper for `physx::PxArticulationDrive` has incorrect size");
+static_assert(sizeof(physx::PxTGSSolverBodyVel) == sizeof(physx_PxTGSSolverBodyVel_Pod), "POD wrapper for `physx::PxTGSSolverBodyVel` has incorrect size");
+static_assert(sizeof(physx::PxTGSSolverBodyTxInertia) == sizeof(physx_PxTGSSolverBodyTxInertia_Pod), "POD wrapper for `physx::PxTGSSolverBodyTxInertia` has incorrect size");
+static_assert(sizeof(physx::PxTGSSolverBodyData) == sizeof(physx_PxTGSSolverBodyData_Pod), "POD wrapper for `physx::PxTGSSolverBodyData` has incorrect size");
+static_assert(sizeof(physx::PxTGSSolverConstraintPrepDescBase) == sizeof(physx_PxTGSSolverConstraintPrepDescBase_Pod), "POD wrapper for `physx::PxTGSSolverConstraintPrepDescBase` has incorrect size");
+static_assert(sizeof(physx::PxTGSSolverConstraintPrepDesc) == sizeof(physx_PxTGSSolverConstraintPrepDesc_Pod), "POD wrapper for `physx::PxTGSSolverConstraintPrepDesc` has incorrect size");
+static_assert(sizeof(physx::PxTGSSolverContactDesc) == sizeof(physx_PxTGSSolverContactDesc_Pod), "POD wrapper for `physx::PxTGSSolverContactDesc` has incorrect size");
+static_assert(sizeof(physx::PxArticulationTendonLimit) == sizeof(physx_PxArticulationTendonLimit_Pod), "POD wrapper for `physx::PxArticulationTendonLimit` has incorrect size");
+static_assert(sizeof(physx::PxSpatialForce) == sizeof(physx_PxSpatialForce_Pod), "POD wrapper for `physx::PxSpatialForce` has incorrect size");
+static_assert(sizeof(physx::PxSpatialVelocity) == sizeof(physx_PxSpatialVelocity_Pod), "POD wrapper for `physx::PxSpatialVelocity` has incorrect size");
+static_assert(sizeof(physx::PxArticulationRootLinkData) == sizeof(physx_PxArticulationRootLinkData_Pod), "POD wrapper for `physx::PxArticulationRootLinkData` has incorrect size");
+static_assert(sizeof(physx::PxArticulationCache) == sizeof(physx_PxArticulationCache_Pod), "POD wrapper for `physx::PxArticulationCache` has incorrect size");
+static_assert(sizeof(physx::PxNodeIndex) == sizeof(physx_PxNodeIndex_Pod), "POD wrapper for `physx::PxNodeIndex` has incorrect size");
+static_assert(sizeof(physx::PxConstraintShaderTable) == sizeof(physx_PxConstraintShaderTable_Pod), "POD wrapper for `physx::PxConstraintShaderTable` has incorrect size");
+static_assert(sizeof(physx::PxContactPatch) == sizeof(physx_PxContactPatch_Pod), "POD wrapper for `physx::PxContactPatch` has incorrect size");
+static_assert(sizeof(physx::PxContact) == sizeof(physx_PxContact_Pod), "POD wrapper for `physx::PxContact` has incorrect size");
+static_assert(sizeof(physx::PxExtendedContact) == sizeof(physx_PxExtendedContact_Pod), "POD wrapper for `physx::PxExtendedContact` has incorrect size");
+static_assert(sizeof(physx::PxModifiableContact) == sizeof(physx_PxModifiableContact_Pod), "POD wrapper for `physx::PxModifiableContact` has incorrect size");
+static_assert(sizeof(physx::PxContactStreamIterator) == sizeof(physx_PxContactStreamIterator_Pod), "POD wrapper for `physx::PxContactStreamIterator` has incorrect size");
+static_assert(sizeof(physx::PxFrictionPatch) == sizeof(physx_PxFrictionPatch_Pod), "POD wrapper for `physx::PxFrictionPatch` has incorrect size");
+static_assert(sizeof(physx::PxFrictionAnchorStreamIterator) == sizeof(physx_PxFrictionAnchorStreamIterator_Pod), "POD wrapper for `physx::PxFrictionAnchorStreamIterator` has incorrect size");
+static_assert(sizeof(physx::PxGpuContactPair) == sizeof(physx_PxGpuContactPair_Pod), "POD wrapper for `physx::PxGpuContactPair` has incorrect size");
+static_assert(sizeof(physx::PxContactSet) == sizeof(physx_PxContactSet_Pod), "POD wrapper for `physx::PxContactSet` has incorrect size");
+static_assert(sizeof(physx::PxContactModifyPair) == sizeof(physx_PxContactModifyPair_Pod), "POD wrapper for `physx::PxContactModifyPair` has incorrect size");
+static_assert(sizeof(physx::PxDiffuseParticleParams) == sizeof(physx_PxDiffuseParticleParams_Pod), "POD wrapper for `physx::PxDiffuseParticleParams` has incorrect size");
+static_assert(sizeof(physx::PxDeformableAttachmentData) == sizeof(physx_PxDeformableAttachmentData_Pod), "POD wrapper for `physx::PxDeformableAttachmentData` has incorrect size");
+static_assert(sizeof(physx::PxDeformableElementFilterData) == sizeof(physx_PxDeformableElementFilterData_Pod), "POD wrapper for `physx::PxDeformableElementFilterData` has incorrect size");
+static_assert(sizeof(physx::PxActorShape) == sizeof(physx_PxActorShape_Pod), "POD wrapper for `physx::PxActorShape` has incorrect size");
+static_assert(sizeof(physx::PxRaycastHit) == sizeof(physx_PxRaycastHit_Pod), "POD wrapper for `physx::PxRaycastHit` has incorrect size");
+static_assert(sizeof(physx::PxOverlapHit) == sizeof(physx_PxOverlapHit_Pod), "POD wrapper for `physx::PxOverlapHit` has incorrect size");
+static_assert(sizeof(physx::PxSweepHit) == sizeof(physx_PxSweepHit_Pod), "POD wrapper for `physx::PxSweepHit` has incorrect size");
+static_assert(sizeof(physx::PxRaycastCallback) == sizeof(physx_PxRaycastCallback_Pod), "POD wrapper for `physx::PxRaycastCallback` has incorrect size");
+static_assert(sizeof(physx::PxOverlapCallback) == sizeof(physx_PxOverlapCallback_Pod), "POD wrapper for `physx::PxOverlapCallback` has incorrect size");
+static_assert(sizeof(physx::PxSweepCallback) == sizeof(physx_PxSweepCallback_Pod), "POD wrapper for `physx::PxSweepCallback` has incorrect size");
+static_assert(sizeof(physx::PxRaycastBuffer) == sizeof(physx_PxRaycastBuffer_Pod), "POD wrapper for `physx::PxRaycastBuffer` has incorrect size");
+static_assert(sizeof(physx::PxOverlapBuffer) == sizeof(physx_PxOverlapBuffer_Pod), "POD wrapper for `physx::PxOverlapBuffer` has incorrect size");
+static_assert(sizeof(physx::PxSweepBuffer) == sizeof(physx_PxSweepBuffer_Pod), "POD wrapper for `physx::PxSweepBuffer` has incorrect size");
+static_assert(sizeof(physx::PxQueryCache) == sizeof(physx_PxQueryCache_Pod), "POD wrapper for `physx::PxQueryCache` has incorrect size");
+static_assert(sizeof(physx::PxQueryFilterData) == sizeof(physx_PxQueryFilterData_Pod), "POD wrapper for `physx::PxQueryFilterData` has incorrect size");
+static_assert(sizeof(physx::PxArticulationGPUAPIMaxCounts) == sizeof(physx_PxArticulationGPUAPIMaxCounts_Pod), "POD wrapper for `physx::PxArticulationGPUAPIMaxCounts` has incorrect size");
+static_assert(sizeof(physx::PxSceneQueryDesc) == sizeof(physx_PxSceneQueryDesc_Pod), "POD wrapper for `physx::PxSceneQueryDesc` has incorrect size");
+static_assert(sizeof(physx::PxBroadPhaseRegion) == sizeof(physx_PxBroadPhaseRegion_Pod), "POD wrapper for `physx::PxBroadPhaseRegion` has incorrect size");
+static_assert(sizeof(physx::PxBroadPhaseRegionInfo) == sizeof(physx_PxBroadPhaseRegionInfo_Pod), "POD wrapper for `physx::PxBroadPhaseRegionInfo` has incorrect size");
+static_assert(sizeof(physx::PxBroadPhaseCaps) == sizeof(physx_PxBroadPhaseCaps_Pod), "POD wrapper for `physx::PxBroadPhaseCaps` has incorrect size");
+static_assert(sizeof(physx::PxGpuBroadPhaseDesc) == sizeof(physx_PxGpuBroadPhaseDesc_Pod), "POD wrapper for `physx::PxGpuBroadPhaseDesc` has incorrect size");
+static_assert(sizeof(physx::PxBroadPhaseDesc) == sizeof(physx_PxBroadPhaseDesc_Pod), "POD wrapper for `physx::PxBroadPhaseDesc` has incorrect size");
+static_assert(sizeof(physx::PxBroadPhaseUpdateData) == sizeof(physx_PxBroadPhaseUpdateData_Pod), "POD wrapper for `physx::PxBroadPhaseUpdateData` has incorrect size");
+static_assert(sizeof(physx::PxBroadPhasePair) == sizeof(physx_PxBroadPhasePair_Pod), "POD wrapper for `physx::PxBroadPhasePair` has incorrect size");
+static_assert(sizeof(physx::PxBroadPhaseResults) == sizeof(physx_PxBroadPhaseResults_Pod), "POD wrapper for `physx::PxBroadPhaseResults` has incorrect size");
+static_assert(sizeof(physx::PxSceneLimits) == sizeof(physx_PxSceneLimits_Pod), "POD wrapper for `physx::PxSceneLimits` has incorrect size");
+static_assert(sizeof(physx::PxGpuDynamicsMemoryConfig) == sizeof(physx_PxGpuDynamicsMemoryConfig_Pod), "POD wrapper for `physx::PxGpuDynamicsMemoryConfig` has incorrect size");
+static_assert(sizeof(physx::PxSceneDesc) == sizeof(physx_PxSceneDesc_Pod), "POD wrapper for `physx::PxSceneDesc` has incorrect size");
+static_assert(sizeof(physx::PxGpuDynamicsMemoryConfigStatistics) == sizeof(physx_PxGpuDynamicsMemoryConfigStatistics_Pod), "POD wrapper for `physx::PxGpuDynamicsMemoryConfigStatistics` has incorrect size");
+static_assert(sizeof(physx::PxSimulationStatistics) == sizeof(physx_PxSimulationStatistics_Pod), "POD wrapper for `physx::PxSimulationStatistics` has incorrect size");
+static_assert(sizeof(physx::PxDominanceGroupPair) == sizeof(physx_PxDominanceGroupPair_Pod), "POD wrapper for `physx::PxDominanceGroupPair` has incorrect size");
+static_assert(sizeof(physx::PxSceneReadLock) == sizeof(physx_PxSceneReadLock_Pod), "POD wrapper for `physx::PxSceneReadLock` has incorrect size");
+static_assert(sizeof(physx::PxSceneWriteLock) == sizeof(physx_PxSceneWriteLock_Pod), "POD wrapper for `physx::PxSceneWriteLock` has incorrect size");
+static_assert(sizeof(physx::PxContactPairExtraDataItem) == sizeof(physx_PxContactPairExtraDataItem_Pod), "POD wrapper for `physx::PxContactPairExtraDataItem` has incorrect size");
+static_assert(sizeof(physx::PxContactPairVelocity) == sizeof(physx_PxContactPairVelocity_Pod), "POD wrapper for `physx::PxContactPairVelocity` has incorrect size");
+static_assert(sizeof(physx::PxContactPairPose) == sizeof(physx_PxContactPairPose_Pod), "POD wrapper for `physx::PxContactPairPose` has incorrect size");
+static_assert(sizeof(physx::PxContactPairIndex) == sizeof(physx_PxContactPairIndex_Pod), "POD wrapper for `physx::PxContactPairIndex` has incorrect size");
+static_assert(sizeof(physx::PxContactPairExtraDataIterator) == sizeof(physx_PxContactPairExtraDataIterator_Pod), "POD wrapper for `physx::PxContactPairExtraDataIterator` has incorrect size");
+static_assert(sizeof(physx::PxContactPairHeader) == sizeof(physx_PxContactPairHeader_Pod), "POD wrapper for `physx::PxContactPairHeader` has incorrect size");
+static_assert(sizeof(physx::PxContactPairPoint) == sizeof(physx_PxContactPairPoint_Pod), "POD wrapper for `physx::PxContactPairPoint` has incorrect size");
+static_assert(sizeof(physx::PxContactPairFrictionAnchor) == sizeof(physx_PxContactPairFrictionAnchor_Pod), "POD wrapper for `physx::PxContactPairFrictionAnchor` has incorrect size");
+static_assert(sizeof(physx::PxContactPair) == sizeof(physx_PxContactPair_Pod), "POD wrapper for `physx::PxContactPair` has incorrect size");
+static_assert(sizeof(physx::PxTriggerPair) == sizeof(physx_PxTriggerPair_Pod), "POD wrapper for `physx::PxTriggerPair` has incorrect size");
+static_assert(sizeof(physx::PxConstraintInfo) == sizeof(physx_PxConstraintInfo_Pod), "POD wrapper for `physx::PxConstraintInfo` has incorrect size");
+static_assert(sizeof(physx::PxObstacle) == sizeof(physx_PxObstacle_Pod), "POD wrapper for `physx::PxObstacle` has incorrect size");
+static_assert(sizeof(physx::PxBoxObstacle) == sizeof(physx_PxBoxObstacle_Pod), "POD wrapper for `physx::PxBoxObstacle` has incorrect size");
+static_assert(sizeof(physx::PxCapsuleObstacle) == sizeof(physx_PxCapsuleObstacle_Pod), "POD wrapper for `physx::PxCapsuleObstacle` has incorrect size");
+static_assert(sizeof(physx::PxControllerState) == sizeof(physx_PxControllerState_Pod), "POD wrapper for `physx::PxControllerState` has incorrect size");
+static_assert(sizeof(physx::PxControllerStats) == sizeof(physx_PxControllerStats_Pod), "POD wrapper for `physx::PxControllerStats` has incorrect size");
+static_assert(sizeof(physx::PxControllerHit) == sizeof(physx_PxControllerHit_Pod), "POD wrapper for `physx::PxControllerHit` has incorrect size");
+static_assert(sizeof(physx::PxControllerShapeHit) == sizeof(physx_PxControllerShapeHit_Pod), "POD wrapper for `physx::PxControllerShapeHit` has incorrect size");
+static_assert(sizeof(physx::PxControllersHit) == sizeof(physx_PxControllersHit_Pod), "POD wrapper for `physx::PxControllersHit` has incorrect size");
+static_assert(sizeof(physx::PxControllerObstacleHit) == sizeof(physx_PxControllerObstacleHit_Pod), "POD wrapper for `physx::PxControllerObstacleHit` has incorrect size");
+static_assert(sizeof(physx::PxControllerFilters) == sizeof(physx_PxControllerFilters_Pod), "POD wrapper for `physx::PxControllerFilters` has incorrect size");
+static_assert(sizeof(physx::PxDim3) == sizeof(physx_PxDim3_Pod), "POD wrapper for `physx::PxDim3` has incorrect size");
+static_assert(sizeof(physx::PxSDFDesc) == sizeof(physx_PxSDFDesc_Pod), "POD wrapper for `physx::PxSDFDesc` has incorrect size");
+static_assert(sizeof(physx::PxConvexMeshDesc) == sizeof(physx_PxConvexMeshDesc_Pod), "POD wrapper for `physx::PxConvexMeshDesc` has incorrect size");
+static_assert(sizeof(physx::PxTriangleMeshDesc) == sizeof(physx_PxTriangleMeshDesc_Pod), "POD wrapper for `physx::PxTriangleMeshDesc` has incorrect size");
+static_assert(sizeof(physx::PxTetrahedronMeshDesc) == sizeof(physx_PxTetrahedronMeshDesc_Pod), "POD wrapper for `physx::PxTetrahedronMeshDesc` has incorrect size");
+static_assert(sizeof(physx::PxDeformableVolumeSimulationDataDesc) == sizeof(physx_PxDeformableVolumeSimulationDataDesc_Pod), "POD wrapper for `physx::PxDeformableVolumeSimulationDataDesc` has incorrect size");
+static_assert(sizeof(physx::PxBVH33MidphaseDesc) == sizeof(physx_PxBVH33MidphaseDesc_Pod), "POD wrapper for `physx::PxBVH33MidphaseDesc` has incorrect size");
+static_assert(sizeof(physx::PxBVH34MidphaseDesc) == sizeof(physx_PxBVH34MidphaseDesc_Pod), "POD wrapper for `physx::PxBVH34MidphaseDesc` has incorrect size");
+static_assert(sizeof(physx::PxMidphaseDesc) == sizeof(physx_PxMidphaseDesc_Pod), "POD wrapper for `physx::PxMidphaseDesc` has incorrect size");
+static_assert(sizeof(physx::PxBVHDesc) == sizeof(physx_PxBVHDesc_Pod), "POD wrapper for `physx::PxBVHDesc` has incorrect size");
+static_assert(sizeof(physx::PxCookingParams) == sizeof(physx_PxCookingParams_Pod), "POD wrapper for `physx::PxCookingParams` has incorrect size");
+static_assert(sizeof(physx::PxSpring) == sizeof(physx_PxSpring_Pod), "POD wrapper for `physx::PxSpring` has incorrect size");
+static_assert(sizeof(physx::PxJointLimitParameters) == sizeof(physx_PxJointLimitParameters_Pod), "POD wrapper for `physx::PxJointLimitParameters` has incorrect size");
+static_assert(sizeof(physx::PxJointLinearLimit) == sizeof(physx_PxJointLinearLimit_Pod), "POD wrapper for `physx::PxJointLinearLimit` has incorrect size");
+static_assert(sizeof(physx::PxJointLinearLimitPair) == sizeof(physx_PxJointLinearLimitPair_Pod), "POD wrapper for `physx::PxJointLinearLimitPair` has incorrect size");
+static_assert(sizeof(physx::PxJointAngularLimitPair) == sizeof(physx_PxJointAngularLimitPair_Pod), "POD wrapper for `physx::PxJointAngularLimitPair` has incorrect size");
+static_assert(sizeof(physx::PxJointLimitCone) == sizeof(physx_PxJointLimitCone_Pod), "POD wrapper for `physx::PxJointLimitCone` has incorrect size");
+static_assert(sizeof(physx::PxJointLimitPyramid) == sizeof(physx_PxJointLimitPyramid_Pod), "POD wrapper for `physx::PxJointLimitPyramid` has incorrect size");
+static_assert(sizeof(physx::PxD6JointDrive) == sizeof(physx_PxD6JointDrive_Pod), "POD wrapper for `physx::PxD6JointDrive` has incorrect size");
+static_assert(sizeof(physx::PxGroupsMask) == sizeof(physx_PxGroupsMask_Pod), "POD wrapper for `physx::PxGroupsMask` has incorrect size");
+static_assert(sizeof(physx::PxRigidActorExt) == sizeof(physx_PxRigidActorExt_Pod), "POD wrapper for `physx::PxRigidActorExt` has incorrect size");
+static_assert(sizeof(physx::PxConvexCoreExt) == sizeof(physx_PxConvexCoreExt_Pod), "POD wrapper for `physx::PxConvexCoreExt` has incorrect size");
+static_assert(sizeof(physx::PxMassProperties) == sizeof(physx_PxMassProperties_Pod), "POD wrapper for `physx::PxMassProperties` has incorrect size");
+static_assert(sizeof(physx::PxRigidBodyExt) == sizeof(physx_PxRigidBodyExt_Pod), "POD wrapper for `physx::PxRigidBodyExt` has incorrect size");
+static_assert(sizeof(physx::PxShapeExt) == sizeof(physx_PxShapeExt_Pod), "POD wrapper for `physx::PxShapeExt` has incorrect size");
+static_assert(sizeof(physx::PxMeshOverlapUtil) == sizeof(physx_PxMeshOverlapUtil_Pod), "POD wrapper for `physx::PxMeshOverlapUtil` has incorrect size");
+static_assert(sizeof(physx::PxSerialization) == sizeof(physx_PxSerialization_Pod), "POD wrapper for `physx::PxSerialization` has incorrect size");
+static_assert(sizeof(physx::PxStringTableExt) == sizeof(physx_PxStringTableExt_Pod), "POD wrapper for `physx::PxStringTableExt` has incorrect size");
+static_assert(sizeof(physx::PxBroadPhaseExt) == sizeof(physx_PxBroadPhaseExt_Pod), "POD wrapper for `physx::PxBroadPhaseExt` has incorrect size");
+static_assert(sizeof(physx::PxSceneQueryExt) == sizeof(physx_PxSceneQueryExt_Pod), "POD wrapper for `physx::PxSceneQueryExt` has incorrect size");
+static_assert(sizeof(physx::PxBatchQueryStatus) == sizeof(physx_PxBatchQueryStatus_Pod), "POD wrapper for `physx::PxBatchQueryStatus` has incorrect size");
+static_assert(sizeof(physx::PxSamplingExt) == sizeof(physx_PxSamplingExt_Pod), "POD wrapper for `physx::PxSamplingExt` has incorrect size");
+static_assert(sizeof(physx::PxTetrahedronMeshExt) == sizeof(physx_PxTetrahedronMeshExt_Pod), "POD wrapper for `physx::PxTetrahedronMeshExt` has incorrect size");
+static_assert(sizeof(physx::PxGjkQuery) == sizeof(physx_PxGjkQuery_Pod), "POD wrapper for `physx::PxGjkQuery` has incorrect size");
+static_assert(sizeof(physx::PxCustomGeometryExt) == sizeof(physx_PxCustomGeometryExt_Pod), "POD wrapper for `physx::PxCustomGeometryExt` has incorrect size");
+static_assert(sizeof(physx::PxDeformableSurfaceExt) == sizeof(physx_PxDeformableSurfaceExt_Pod), "POD wrapper for `physx::PxDeformableSurfaceExt` has incorrect size");
+static_assert(sizeof(physx::PxRepXObject) == sizeof(physx_PxRepXObject_Pod), "POD wrapper for `physx::PxRepXObject` has incorrect size");
+static_assert(sizeof(physx::PxRepXInstantiationArgs) == sizeof(physx_PxRepXInstantiationArgs_Pod), "POD wrapper for `physx::PxRepXInstantiationArgs` has incorrect size");
+static_assert(sizeof(physx::PxVehicleComponentSequence) == sizeof(physx_PxVehicleComponentSequence_Pod), "POD wrapper for `physx::PxVehicleComponentSequence` has incorrect size");
+static_assert(sizeof(physx::PxVehicleAxleDescription) == sizeof(physx_PxVehicleAxleDescription_Pod), "POD wrapper for `physx::PxVehicleAxleDescription` has incorrect size");
+static_assert(sizeof(physx::PxVehicleFrame) == sizeof(physx_PxVehicleFrame_Pod), "POD wrapper for `physx::PxVehicleFrame` has incorrect size");
+static_assert(sizeof(physx::PxVehicleScale) == sizeof(physx_PxVehicleScale_Pod), "POD wrapper for `physx::PxVehicleScale` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireSlipParams) == sizeof(physx_PxVehicleTireSlipParams_Pod), "POD wrapper for `physx::PxVehicleTireSlipParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireAxisStickyParams) == sizeof(physx_PxVehicleTireAxisStickyParams_Pod), "POD wrapper for `physx::PxVehicleTireAxisStickyParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireStickyParams) == sizeof(physx_PxVehicleTireStickyParams_Pod), "POD wrapper for `physx::PxVehicleTireStickyParams` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePvdContext) == sizeof(physx_PxVehiclePvdContext_Pod), "POD wrapper for `physx::PxVehiclePvdContext` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSimulationContext) == sizeof(physx_PxVehicleSimulationContext_Pod), "POD wrapper for `physx::PxVehicleSimulationContext` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXSimulationContext) == sizeof(physx_PxVehiclePhysXSimulationContext_Pod), "POD wrapper for `physx::PxVehiclePhysXSimulationContext` has incorrect size");
+static_assert(sizeof(physx::PxVehicleRoadGeometryState) == sizeof(physx_PxVehicleRoadGeometryState_Pod), "POD wrapper for `physx::PxVehicleRoadGeometryState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleRigidBodyState) == sizeof(physx_PxVehicleRigidBodyState_Pod), "POD wrapper for `physx::PxVehicleRigidBodyState` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXRoadGeometryQueryState) == sizeof(physx_PxVehiclePhysXRoadGeometryQueryState_Pod), "POD wrapper for `physx::PxVehiclePhysXRoadGeometryQueryState` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXActor) == sizeof(physx_PxVehiclePhysXActor_Pod), "POD wrapper for `physx::PxVehiclePhysXActor` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXSteerState) == sizeof(physx_PxVehiclePhysXSteerState_Pod), "POD wrapper for `physx::PxVehiclePhysXSteerState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleVectorN) == sizeof(physx_PxVehicleVectorN_Pod), "POD wrapper for `physx::PxVehicleVectorN` has incorrect size");
+static_assert(sizeof(physx::PxVehicleMatrixNN) == sizeof(physx_PxVehicleMatrixNN_Pod), "POD wrapper for `physx::PxVehicleMatrixNN` has incorrect size");
+static_assert(sizeof(physx::PxVehicleMatrixNNLUSolver) == sizeof(physx_PxVehicleMatrixNNLUSolver_Pod), "POD wrapper for `physx::PxVehicleMatrixNNLUSolver` has incorrect size");
+static_assert(sizeof(physx::PxVehicleMatrixNGaussSeidelSolver) == sizeof(physx_PxVehicleMatrixNGaussSeidelSolver_Pod), "POD wrapper for `physx::PxVehicleMatrixNGaussSeidelSolver` has incorrect size");
+static_assert(sizeof(physx::PxVehicleMatrix33Solver) == sizeof(physx_PxVehicleMatrix33Solver_Pod), "POD wrapper for `physx::PxVehicleMatrix33Solver` has incorrect size");
+static_assert(sizeof(physx::PxVehicleCommandValueResponseTable) == sizeof(physx_PxVehicleCommandValueResponseTable_Pod), "POD wrapper for `physx::PxVehicleCommandValueResponseTable` has incorrect size");
+static_assert(sizeof(physx::PxVehicleCommandNonLinearResponseParams) == sizeof(physx_PxVehicleCommandNonLinearResponseParams_Pod), "POD wrapper for `physx::PxVehicleCommandNonLinearResponseParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleCommandResponseParams) == sizeof(physx_PxVehicleCommandResponseParams_Pod), "POD wrapper for `physx::PxVehicleCommandResponseParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleBrakeCommandResponseParams) == sizeof(physx_PxVehicleBrakeCommandResponseParams_Pod), "POD wrapper for `physx::PxVehicleBrakeCommandResponseParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleCommandState) == sizeof(physx_PxVehicleCommandState_Pod), "POD wrapper for `physx::PxVehicleCommandState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleDirectDriveTransmissionCommandState) == sizeof(physx_PxVehicleDirectDriveTransmissionCommandState_Pod), "POD wrapper for `physx::PxVehicleDirectDriveTransmissionCommandState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleEngineDriveTransmissionCommandState) == sizeof(physx_PxVehicleEngineDriveTransmissionCommandState_Pod), "POD wrapper for `physx::PxVehicleEngineDriveTransmissionCommandState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTankDriveTransmissionCommandState) == sizeof(physx_PxVehicleTankDriveTransmissionCommandState_Pod), "POD wrapper for `physx::PxVehicleTankDriveTransmissionCommandState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleDirectDriveThrottleCommandResponseParams) == sizeof(physx_PxVehicleDirectDriveThrottleCommandResponseParams_Pod), "POD wrapper for `physx::PxVehicleDirectDriveThrottleCommandResponseParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleClutchCommandResponseParams) == sizeof(physx_PxVehicleClutchCommandResponseParams_Pod), "POD wrapper for `physx::PxVehicleClutchCommandResponseParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleClutchParams) == sizeof(physx_PxVehicleClutchParams_Pod), "POD wrapper for `physx::PxVehicleClutchParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleEngineParams) == sizeof(physx_PxVehicleEngineParams_Pod), "POD wrapper for `physx::PxVehicleEngineParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleGearboxParams) == sizeof(physx_PxVehicleGearboxParams_Pod), "POD wrapper for `physx::PxVehicleGearboxParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleAutoboxParams) == sizeof(physx_PxVehicleAutoboxParams_Pod), "POD wrapper for `physx::PxVehicleAutoboxParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleFourWheelDriveDifferentialLegacyParams) == sizeof(physx_PxVehicleFourWheelDriveDifferentialLegacyParams_Pod), "POD wrapper for `physx::PxVehicleFourWheelDriveDifferentialLegacyParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleMultiWheelDriveDifferentialParams) == sizeof(physx_PxVehicleMultiWheelDriveDifferentialParams_Pod), "POD wrapper for `physx::PxVehicleMultiWheelDriveDifferentialParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleFourWheelDriveDifferentialParams) == sizeof(physx_PxVehicleFourWheelDriveDifferentialParams_Pod), "POD wrapper for `physx::PxVehicleFourWheelDriveDifferentialParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTankDriveDifferentialParams) == sizeof(physx_PxVehicleTankDriveDifferentialParams_Pod), "POD wrapper for `physx::PxVehicleTankDriveDifferentialParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleClutchCommandResponseState) == sizeof(physx_PxVehicleClutchCommandResponseState_Pod), "POD wrapper for `physx::PxVehicleClutchCommandResponseState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleEngineDriveThrottleCommandResponseState) == sizeof(physx_PxVehicleEngineDriveThrottleCommandResponseState_Pod), "POD wrapper for `physx::PxVehicleEngineDriveThrottleCommandResponseState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleEngineState) == sizeof(physx_PxVehicleEngineState_Pod), "POD wrapper for `physx::PxVehicleEngineState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleGearboxState) == sizeof(physx_PxVehicleGearboxState_Pod), "POD wrapper for `physx::PxVehicleGearboxState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleAutoboxState) == sizeof(physx_PxVehicleAutoboxState_Pod), "POD wrapper for `physx::PxVehicleAutoboxState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleDifferentialState) == sizeof(physx_PxVehicleDifferentialState_Pod), "POD wrapper for `physx::PxVehicleDifferentialState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleWheelConstraintGroupState) == sizeof(physx_PxVehicleWheelConstraintGroupState_Pod), "POD wrapper for `physx::PxVehicleWheelConstraintGroupState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleClutchSlipState) == sizeof(physx_PxVehicleClutchSlipState_Pod), "POD wrapper for `physx::PxVehicleClutchSlipState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSteerCommandResponseParams) == sizeof(physx_PxVehicleSteerCommandResponseParams_Pod), "POD wrapper for `physx::PxVehicleSteerCommandResponseParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleAckermannParams) == sizeof(physx_PxVehicleAckermannParams_Pod), "POD wrapper for `physx::PxVehicleAckermannParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleWheelActuationState) == sizeof(physx_PxVehicleWheelActuationState_Pod), "POD wrapper for `physx::PxVehicleWheelActuationState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleWheelRigidBody1dState) == sizeof(physx_PxVehicleWheelRigidBody1dState_Pod), "POD wrapper for `physx::PxVehicleWheelRigidBody1dState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleWheelLocalPose) == sizeof(physx_PxVehicleWheelLocalPose_Pod), "POD wrapper for `physx::PxVehicleWheelLocalPose` has incorrect size");
+static_assert(sizeof(physx::PxVehicleWheelParams) == sizeof(physx_PxVehicleWheelParams_Pod), "POD wrapper for `physx::PxVehicleWheelParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireDirectionState) == sizeof(physx_PxVehicleTireDirectionState_Pod), "POD wrapper for `physx::PxVehicleTireDirectionState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireSpeedState) == sizeof(physx_PxVehicleTireSpeedState_Pod), "POD wrapper for `physx::PxVehicleTireSpeedState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireSlipState) == sizeof(physx_PxVehicleTireSlipState_Pod), "POD wrapper for `physx::PxVehicleTireSlipState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireGripState) == sizeof(physx_PxVehicleTireGripState_Pod), "POD wrapper for `physx::PxVehicleTireGripState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireCamberAngleState) == sizeof(physx_PxVehicleTireCamberAngleState_Pod), "POD wrapper for `physx::PxVehicleTireCamberAngleState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireStickyState) == sizeof(physx_PxVehicleTireStickyState_Pod), "POD wrapper for `physx::PxVehicleTireStickyState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireForce) == sizeof(physx_PxVehicleTireForce_Pod), "POD wrapper for `physx::PxVehicleTireForce` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXRigidActorParams) == sizeof(physx_PxVehiclePhysXRigidActorParams_Pod), "POD wrapper for `physx::PxVehiclePhysXRigidActorParams` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXRigidActorShapeParams) == sizeof(physx_PxVehiclePhysXRigidActorShapeParams_Pod), "POD wrapper for `physx::PxVehiclePhysXRigidActorShapeParams` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXWheelParams) == sizeof(physx_PxVehiclePhysXWheelParams_Pod), "POD wrapper for `physx::PxVehiclePhysXWheelParams` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXWheelShapeParams) == sizeof(physx_PxVehiclePhysXWheelShapeParams_Pod), "POD wrapper for `physx::PxVehiclePhysXWheelShapeParams` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXSuspensionLimitConstraintParams) == sizeof(physx_PxVehiclePhysXSuspensionLimitConstraintParams_Pod), "POD wrapper for `physx::PxVehiclePhysXSuspensionLimitConstraintParams` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXConstraintState) == sizeof(physx_PxVehiclePhysXConstraintState_Pod), "POD wrapper for `physx::PxVehiclePhysXConstraintState` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXConstraints) == sizeof(physx_PxVehiclePhysXConstraints_Pod), "POD wrapper for `physx::PxVehiclePhysXConstraints` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSuspensionParams) == sizeof(physx_PxVehicleSuspensionParams_Pod), "POD wrapper for `physx::PxVehicleSuspensionParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSuspensionStateCalculationParams) == sizeof(physx_PxVehicleSuspensionStateCalculationParams_Pod), "POD wrapper for `physx::PxVehicleSuspensionStateCalculationParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSuspensionComplianceParams) == sizeof(physx_PxVehicleSuspensionComplianceParams_Pod), "POD wrapper for `physx::PxVehicleSuspensionComplianceParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSuspensionForceParams) == sizeof(physx_PxVehicleSuspensionForceParams_Pod), "POD wrapper for `physx::PxVehicleSuspensionForceParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSuspensionForceLegacyParams) == sizeof(physx_PxVehicleSuspensionForceLegacyParams_Pod), "POD wrapper for `physx::PxVehicleSuspensionForceLegacyParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleAntiRollForceParams) == sizeof(physx_PxVehicleAntiRollForceParams_Pod), "POD wrapper for `physx::PxVehicleAntiRollForceParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSuspensionState) == sizeof(physx_PxVehicleSuspensionState_Pod), "POD wrapper for `physx::PxVehicleSuspensionState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSuspensionComplianceState) == sizeof(physx_PxVehicleSuspensionComplianceState_Pod), "POD wrapper for `physx::PxVehicleSuspensionComplianceState` has incorrect size");
+static_assert(sizeof(physx::PxVehicleSuspensionForce) == sizeof(physx_PxVehicleSuspensionForce_Pod), "POD wrapper for `physx::PxVehicleSuspensionForce` has incorrect size");
+static_assert(sizeof(physx::PxVehicleAntiRollTorque) == sizeof(physx_PxVehicleAntiRollTorque_Pod), "POD wrapper for `physx::PxVehicleAntiRollTorque` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXRoadGeometryQueryParams) == sizeof(physx_PxVehiclePhysXRoadGeometryQueryParams_Pod), "POD wrapper for `physx::PxVehiclePhysXRoadGeometryQueryParams` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXMaterialFriction) == sizeof(physx_PxVehiclePhysXMaterialFriction_Pod), "POD wrapper for `physx::PxVehiclePhysXMaterialFriction` has incorrect size");
+static_assert(sizeof(physx::PxVehiclePhysXMaterialFrictionParams) == sizeof(physx_PxVehiclePhysXMaterialFrictionParams_Pod), "POD wrapper for `physx::PxVehiclePhysXMaterialFrictionParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleTireForceParams) == sizeof(physx_PxVehicleTireForceParams_Pod), "POD wrapper for `physx::PxVehicleTireForceParams` has incorrect size");
+static_assert(sizeof(physx::PxVehicleRigidBodyParams) == sizeof(physx_PxVehicleRigidBodyParams_Pod), "POD wrapper for `physx::PxVehicleRigidBodyParams` has incorrect size");
 
 extern "C" {
     void PxAllocatorCallback_delete(physx_PxAllocatorCallback_Pod* self__pod) {
@@ -1325,6 +1600,12 @@ extern "C" {
         return return_val;
     }
 
+    physx_PxSocket_Pod* PxSocket_new_alloc(bool inEnableBuffering, bool blocking) {
+        auto return_val = new physx::PxSocket(inEnableBuffering, blocking);
+        auto return_val_pod = reinterpret_cast<physx_PxSocket_Pod*>(return_val);
+        return return_val_pod;
+    }
+
     void PxSocket_delete(physx_PxSocket_Pod* self__pod) {
         physx::PxSocket* self_ = reinterpret_cast<physx::PxSocket*>(self__pod);
         delete self_;
@@ -1462,6 +1743,12 @@ extern "C" {
 
     physx_PxThreadImpl_Pod* PxThreadImpl_new_alloc() {
         auto return_val = new physx::PxThreadImpl();
+        auto return_val_pod = reinterpret_cast<physx_PxThreadImpl_Pod*>(return_val);
+        return return_val_pod;
+    }
+
+    physx_PxThreadImpl_Pod* PxThreadImpl_new_alloc_1(void * fn, void* arg, char const* name) {
+        auto return_val = new physx::PxThreadImpl(fn, arg, name);
         auto return_val_pod = reinterpret_cast<physx_PxThreadImpl_Pod*>(return_val);
         return return_val_pod;
     }
@@ -4355,6 +4642,15 @@ extern "C" {
     void* PxConstraintConnector_prepareData_mut(physx_PxConstraintConnector_Pod* self__pod) {
         physx::PxConstraintConnector* self_ = reinterpret_cast<physx::PxConstraintConnector*>(self__pod);
         void* return_val = self_->prepareData();
+        return return_val;
+    }
+
+    bool PxConstraintConnector_updatePvdProperties(physx_PxConstraintConnector_Pod const* self__pod, physx_pvdsdk::PvdDataStream_Pod* pvdConnection_pod, physx_PxConstraint_Pod const* c_pod, int32_t updateType_pod) {
+        physx::PxConstraintConnector const* self_ = reinterpret_cast<physx::PxConstraintConnector const*>(self__pod);
+        physx::pvdsdk::PvdDataStream& pvdConnection = reinterpret_cast<physx::pvdsdk::PvdDataStream&>(*pvdConnection_pod);
+        physx::PxConstraint const* c = reinterpret_cast<physx::PxConstraint const*>(c_pod);
+        auto updateType = static_cast<physx::PxPvdUpdateType::Enum>(updateType_pod);
+        bool return_val = self_->updatePvdProperties(pvdConnection, c, updateType);
         return return_val;
     }
 
@@ -8480,6 +8776,86 @@ extern "C" {
         return return_val_pod;
     }
 
+    bool PxDirectGPUAPI_getRigidDynamicData(physx_PxDirectGPUAPI_Pod const* self__pod, void* data, uint32_t const* gpuIndices, int32_t dataType_pod, uint32_t nbElements, physx_CUevent_st_Pod* startEvent_pod, physx_CUevent_st_Pod* finishEvent_pod) {
+        physx::PxDirectGPUAPI const* self_ = reinterpret_cast<physx::PxDirectGPUAPI const*>(self__pod);
+        auto dataType = static_cast<physx::PxRigidDynamicGPUAPIReadType::Enum>(dataType_pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        physx::CUevent_st* finishEvent = reinterpret_cast<physx::CUevent_st*>(finishEvent_pod);
+        bool return_val = self_->getRigidDynamicData(data, gpuIndices, dataType, nbElements, startEvent, finishEvent);
+        return return_val;
+    }
+
+    bool PxDirectGPUAPI_setRigidDynamicData_mut(physx_PxDirectGPUAPI_Pod* self__pod, void const* data, uint32_t const* gpuIndices, int32_t dataType_pod, uint32_t nbElements, physx_CUevent_st_Pod* startEvent_pod, physx_CUevent_st_Pod* finishEvent_pod) {
+        physx::PxDirectGPUAPI* self_ = reinterpret_cast<physx::PxDirectGPUAPI*>(self__pod);
+        auto dataType = static_cast<physx::PxRigidDynamicGPUAPIWriteType::Enum>(dataType_pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        physx::CUevent_st* finishEvent = reinterpret_cast<physx::CUevent_st*>(finishEvent_pod);
+        bool return_val = self_->setRigidDynamicData(data, gpuIndices, dataType, nbElements, startEvent, finishEvent);
+        return return_val;
+    }
+
+    bool PxDirectGPUAPI_getArticulationData(physx_PxDirectGPUAPI_Pod const* self__pod, void* data, uint32_t const* gpuIndices, int32_t dataType_pod, uint32_t nbElements, physx_CUevent_st_Pod* startEvent_pod, physx_CUevent_st_Pod* finishEvent_pod) {
+        physx::PxDirectGPUAPI const* self_ = reinterpret_cast<physx::PxDirectGPUAPI const*>(self__pod);
+        auto dataType = static_cast<physx::PxArticulationGPUAPIReadType::Enum>(dataType_pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        physx::CUevent_st* finishEvent = reinterpret_cast<physx::CUevent_st*>(finishEvent_pod);
+        bool return_val = self_->getArticulationData(data, gpuIndices, dataType, nbElements, startEvent, finishEvent);
+        return return_val;
+    }
+
+    bool PxDirectGPUAPI_setArticulationData_mut(physx_PxDirectGPUAPI_Pod* self__pod, void const* data, uint32_t const* gpuIndices, int32_t dataType_pod, uint32_t nbElements, physx_CUevent_st_Pod* startEvent_pod, physx_CUevent_st_Pod* finishEvent_pod) {
+        physx::PxDirectGPUAPI* self_ = reinterpret_cast<physx::PxDirectGPUAPI*>(self__pod);
+        auto dataType = static_cast<physx::PxArticulationGPUAPIWriteType::Enum>(dataType_pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        physx::CUevent_st* finishEvent = reinterpret_cast<physx::CUevent_st*>(finishEvent_pod);
+        bool return_val = self_->setArticulationData(data, gpuIndices, dataType, nbElements, startEvent, finishEvent);
+        return return_val;
+    }
+
+    bool PxDirectGPUAPI_computeArticulationData_mut(physx_PxDirectGPUAPI_Pod* self__pod, void* data, uint32_t const* gpuIndices, int32_t operation_pod, uint32_t nbElements, physx_CUevent_st_Pod* startEvent_pod, physx_CUevent_st_Pod* finishEvent_pod) {
+        physx::PxDirectGPUAPI* self_ = reinterpret_cast<physx::PxDirectGPUAPI*>(self__pod);
+        auto operation = static_cast<physx::PxArticulationGPUAPIComputeType::Enum>(operation_pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        physx::CUevent_st* finishEvent = reinterpret_cast<physx::CUevent_st*>(finishEvent_pod);
+        bool return_val = self_->computeArticulationData(data, gpuIndices, operation, nbElements, startEvent, finishEvent);
+        return return_val;
+    }
+
+    bool PxDirectGPUAPI_copyContactData(physx_PxDirectGPUAPI_Pod const* self__pod, void* data, uint32_t* nbContactPairs, uint32_t maxPairs, physx_CUevent_st_Pod* startEvent_pod, physx_CUevent_st_Pod* finishEvent_pod) {
+        physx::PxDirectGPUAPI const* self_ = reinterpret_cast<physx::PxDirectGPUAPI const*>(self__pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        physx::CUevent_st* finishEvent = reinterpret_cast<physx::CUevent_st*>(finishEvent_pod);
+        bool return_val = self_->copyContactData(data, nbContactPairs, maxPairs, startEvent, finishEvent);
+        return return_val;
+    }
+
+    bool PxDirectGPUAPI_evaluateSDFDistances(physx_PxDirectGPUAPI_Pod const* self__pod, physx_PxVec4_Pod* localGradientAndSignedDistanceConcatenated_pod, uint32_t const* shapeIndices, physx_PxVec4_Pod const* localSamplePointsConcatenated_pod, uint32_t const* samplePointCountPerShape, uint32_t nbElements, uint32_t maxPointCount, physx_CUevent_st_Pod* startEvent_pod, physx_CUevent_st_Pod* finishEvent_pod) {
+        physx::PxDirectGPUAPI const* self_ = reinterpret_cast<physx::PxDirectGPUAPI const*>(self__pod);
+        physx::PxVec4* localGradientAndSignedDistanceConcatenated = reinterpret_cast<physx::PxVec4*>(localGradientAndSignedDistanceConcatenated_pod);
+        physx::PxVec4 const* localSamplePointsConcatenated = reinterpret_cast<physx::PxVec4 const*>(localSamplePointsConcatenated_pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        physx::CUevent_st* finishEvent = reinterpret_cast<physx::CUevent_st*>(finishEvent_pod);
+        bool return_val = self_->evaluateSDFDistances(localGradientAndSignedDistanceConcatenated, shapeIndices, localSamplePointsConcatenated, samplePointCountPerShape, nbElements, maxPointCount, startEvent, finishEvent);
+        return return_val;
+    }
+
+    physx_PxArticulationGPUAPIMaxCounts_Pod PxDirectGPUAPI_getArticulationGPUAPIMaxCounts(physx_PxDirectGPUAPI_Pod const* self__pod) {
+        physx::PxDirectGPUAPI const* self_ = reinterpret_cast<physx::PxDirectGPUAPI const*>(self__pod);
+        physx::PxArticulationGPUAPIMaxCounts return_val = self_->getArticulationGPUAPIMaxCounts();
+        physx_PxArticulationGPUAPIMaxCounts_Pod return_val_pod;
+        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
+        return return_val_pod;
+    }
+
+    bool PxDirectGPUAPI_getD6JointData(physx_PxDirectGPUAPI_Pod const* self__pod, void* data, uint32_t const* gpuIndices, int32_t dataType_pod, uint32_t nbElements, physx_CUevent_st_Pod* startEvent_pod, physx_CUevent_st_Pod* finishEvent_pod) {
+        physx::PxDirectGPUAPI const* self_ = reinterpret_cast<physx::PxDirectGPUAPI const*>(self__pod);
+        auto dataType = static_cast<physx::PxD6JointGPUAPIReadType::Enum>(dataType_pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        physx::CUevent_st* finishEvent = reinterpret_cast<physx::CUevent_st*>(finishEvent_pod);
+        bool return_val = self_->getD6JointData(data, gpuIndices, dataType, nbElements, startEvent, finishEvent);
+        return return_val;
+    }
+
     physx_PxSceneQueryDesc_Pod PxSceneQueryDesc_new() {
         PxSceneQueryDesc return_val;
         physx_PxSceneQueryDesc_Pod return_val_pod;
@@ -9165,6 +9541,13 @@ extern "C" {
         self_->drawText(text);
     }
 
+    physx_pvdsdk::PvdClient_Pod* PxPvdSceneClient_getClientInternal_mut(physx_PxPvdSceneClient_Pod* self__pod) {
+        physx::PxPvdSceneClient* self_ = reinterpret_cast<physx::PxPvdSceneClient*>(self__pod);
+        physx::pvdsdk::PvdClient* return_val = self_->getClientInternal();
+        auto return_val_pod = reinterpret_cast<physx_pvdsdk::PvdClient_Pod*>(return_val);
+        return return_val_pod;
+    }
+
     physx_PxDominanceGroupPair_Pod PxDominanceGroupPair_new(uint8_t a, uint8_t b) {
         PxDominanceGroupPair return_val(a, b);
         physx_PxDominanceGroupPair_Pod return_val_pod;
@@ -9188,6 +9571,12 @@ extern "C" {
         physx::PxBroadPhaseCallback* self_ = reinterpret_cast<physx::PxBroadPhaseCallback*>(self__pod);
         physx::PxAggregate& aggregate = reinterpret_cast<physx::PxAggregate&>(*aggregate_pod);
         self_->onObjectOutOfBounds(aggregate);
+    }
+
+    void PxPostSolveCallback_onPostSolve_mut(physx_PxPostSolveCallback_Pod* self__pod, physx_CUevent_st_Pod* startEvent_pod) {
+        physx::PxPostSolveCallback* self_ = reinterpret_cast<physx::PxPostSolveCallback*>(self__pod);
+        physx::CUevent_st* startEvent = reinterpret_cast<physx::CUevent_st*>(startEvent_pod);
+        self_->onPostSolve(startEvent);
     }
 
     void PxPostSolveCallback_delete(physx_PxPostSolveCallback_Pod* self__pod) {
@@ -9371,6 +9760,12 @@ extern "C" {
     uint32_t PxScene_getNbPBDParticleSystems(physx_PxScene_Pod const* self__pod) {
         physx::PxScene const* self_ = reinterpret_cast<physx::PxScene const*>(self__pod);
         uint32_t return_val = self_->getNbPBDParticleSystems();
+        return return_val;
+    }
+
+    uint32_t PxScene_getPBDParticleSystems(physx_PxScene_Pod const* self__pod, void* userBuffer, uint32_t bufferSize, uint32_t startIndex) {
+        physx::PxScene const* self_ = reinterpret_cast<physx::PxScene const*>(self__pod);
+        uint32_t return_val = self_->getPBDParticleSystems(userBuffer, bufferSize, startIndex);
         return return_val;
     }
 
@@ -10141,17 +10536,17 @@ extern "C" {
         return return_val;
     }
 
-    physx_PxVec3_Pod phys_toVec3(physx_PxExtendedVec3_Pod const* v_pod) {
-        physx::PxExtendedVec3 const& v = reinterpret_cast<physx::PxExtendedVec3 const&>(*v_pod);
+    physx_PxVec3_Pod phys_toVec3(physx_PxVec3T<double>_Pod const* v_pod) {
+        physx::PxVec3T<double> const& v = reinterpret_cast<physx::PxVec3T<double> const&>(*v_pod);
         physx::PxVec3 return_val = toVec3(v);
         physx_PxVec3_Pod return_val_pod;
         memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
         return return_val_pod;
     }
 
-    physx_PxVec3_Pod phys_diff(physx_PxExtendedVec3_Pod const* p1_pod, physx_PxExtendedVec3_Pod const* p0_pod) {
-        physx::PxExtendedVec3 const& p1 = reinterpret_cast<physx::PxExtendedVec3 const&>(*p1_pod);
-        physx::PxExtendedVec3 const& p0 = reinterpret_cast<physx::PxExtendedVec3 const&>(*p0_pod);
+    physx_PxVec3_Pod phys_diff(physx_PxVec3T<double>_Pod const* p1_pod, physx_PxVec3T<double>_Pod const* p0_pod) {
+        physx::PxVec3T<double> const& p1 = reinterpret_cast<physx::PxVec3T<double> const&>(*p1_pod);
+        physx::PxVec3T<double> const& p0 = reinterpret_cast<physx::PxVec3T<double> const&>(*p0_pod);
         physx::PxVec3 return_val = diff(p1, p0);
         physx_PxVec3_Pod return_val_pod;
         memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
@@ -10311,31 +10706,31 @@ extern "C" {
         return return_val_pod;
     }
 
-    bool PxController_setPosition_mut(physx_PxController_Pod* self__pod, physx_PxExtendedVec3_Pod const* position_pod) {
+    bool PxController_setPosition_mut(physx_PxController_Pod* self__pod, physx_PxVec3T<double>_Pod const* position_pod) {
         physx::PxController* self_ = reinterpret_cast<physx::PxController*>(self__pod);
-        physx::PxExtendedVec3 const& position = reinterpret_cast<physx::PxExtendedVec3 const&>(*position_pod);
+        physx::PxVec3T<double> const& position = reinterpret_cast<physx::PxVec3T<double> const&>(*position_pod);
         bool return_val = self_->setPosition(position);
         return return_val;
     }
 
-    physx_PxExtendedVec3_Pod const* PxController_getPosition(physx_PxController_Pod const* self__pod) {
+    physx_PxVec3T<double>_Pod const* PxController_getPosition(physx_PxController_Pod const* self__pod) {
         physx::PxController const* self_ = reinterpret_cast<physx::PxController const*>(self__pod);
-        physx::PxExtendedVec3 const& return_val = self_->getPosition();
-        auto return_val_pod = reinterpret_cast<physx_PxExtendedVec3_Pod const*>(&return_val);
+        physx::PxVec3T<double> const& return_val = self_->getPosition();
+        auto return_val_pod = reinterpret_cast<physx_PxVec3T<double>_Pod const*>(&return_val);
         return return_val_pod;
     }
 
-    bool PxController_setFootPosition_mut(physx_PxController_Pod* self__pod, physx_PxExtendedVec3_Pod const* position_pod) {
+    bool PxController_setFootPosition_mut(physx_PxController_Pod* self__pod, physx_PxVec3T<double>_Pod const* position_pod) {
         physx::PxController* self_ = reinterpret_cast<physx::PxController*>(self__pod);
-        physx::PxExtendedVec3 const& position = reinterpret_cast<physx::PxExtendedVec3 const&>(*position_pod);
+        physx::PxVec3T<double> const& position = reinterpret_cast<physx::PxVec3T<double> const&>(*position_pod);
         bool return_val = self_->setFootPosition(position);
         return return_val;
     }
 
-    physx_PxExtendedVec3_Pod PxController_getFootPosition(physx_PxController_Pod const* self__pod) {
+    physx_PxVec3T<double>_Pod PxController_getFootPosition(physx_PxController_Pod const* self__pod) {
         physx::PxController const* self_ = reinterpret_cast<physx::PxController const*>(self__pod);
-        physx::PxExtendedVec3 return_val = self_->getFootPosition();
-        physx_PxExtendedVec3_Pod return_val_pod;
+        physx::PxVec3T<double> return_val = self_->getFootPosition();
+        physx_PxVec3T<double>_Pod return_val_pod;
         memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
         return return_val_pod;
     }
@@ -12677,12 +13072,35 @@ extern "C" {
         PxSerialization::createSerialObjectIds(collection, base);
     }
 
+    physx_PxCollection_Pod* PxSerialization_createCollectionFromXml(physx_PxInputData_Pod* inputData_pod, physx_PxCookingParams_Pod const* params_pod, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCollection_Pod const* externalRefs_pod, physx_PxStringTable_Pod* stringTable_pod, physx_PxXmlMiscParameter_Pod* outArgs_pod) {
+        physx::PxInputData& inputData = reinterpret_cast<physx::PxInputData&>(*inputData_pod);
+        physx::PxCookingParams const& params = reinterpret_cast<physx::PxCookingParams const&>(*params_pod);
+        physx::PxSerializationRegistry& sr = reinterpret_cast<physx::PxSerializationRegistry&>(*sr_pod);
+        physx::PxCollection const* externalRefs = reinterpret_cast<physx::PxCollection const*>(externalRefs_pod);
+        physx::PxStringTable* stringTable = reinterpret_cast<physx::PxStringTable*>(stringTable_pod);
+        physx::PxXmlMiscParameter* outArgs = reinterpret_cast<physx::PxXmlMiscParameter*>(outArgs_pod);
+        physx::PxCollection* return_val = PxSerialization::createCollectionFromXml(inputData, params, sr, externalRefs, stringTable, outArgs);
+        auto return_val_pod = reinterpret_cast<physx_PxCollection_Pod*>(return_val);
+        return return_val_pod;
+    }
+
     physx_PxCollection_Pod* PxSerialization_createCollectionFromBinary(void* memBlock, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCollection_Pod const* externalRefs_pod) {
         physx::PxSerializationRegistry& sr = reinterpret_cast<physx::PxSerializationRegistry&>(*sr_pod);
         physx::PxCollection const* externalRefs = reinterpret_cast<physx::PxCollection const*>(externalRefs_pod);
         physx::PxCollection* return_val = PxSerialization::createCollectionFromBinary(memBlock, sr, externalRefs);
         auto return_val_pod = reinterpret_cast<physx_PxCollection_Pod*>(return_val);
         return return_val_pod;
+    }
+
+    bool PxSerialization_serializeCollectionToXml(physx_PxOutputStream_Pod* outputStream_pod, physx_PxCollection_Pod* collection_pod, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCookingParams_Pod const* params_pod, physx_PxCollection_Pod const* externalRefs_pod, physx_PxXmlMiscParameter_Pod* inArgs_pod) {
+        physx::PxOutputStream& outputStream = reinterpret_cast<physx::PxOutputStream&>(*outputStream_pod);
+        physx::PxCollection& collection = reinterpret_cast<physx::PxCollection&>(*collection_pod);
+        physx::PxSerializationRegistry& sr = reinterpret_cast<physx::PxSerializationRegistry&>(*sr_pod);
+        physx::PxCookingParams const* params = reinterpret_cast<physx::PxCookingParams const*>(params_pod);
+        physx::PxCollection const* externalRefs = reinterpret_cast<physx::PxCollection const*>(externalRefs_pod);
+        physx::PxXmlMiscParameter* inArgs = reinterpret_cast<physx::PxXmlMiscParameter*>(inArgs_pod);
+        bool return_val = PxSerialization::serializeCollectionToXml(outputStream, collection, sr, params, externalRefs, inArgs);
+        return return_val;
     }
 
     bool PxSerialization_serializeCollectionToBinary(physx_PxOutputStream_Pod* outputStream_pod, physx_PxCollection_Pod* collection_pod, physx_PxSerializationRegistry_Pod* sr_pod, physx_PxCollection_Pod const* externalRefs_pod, bool exportNames) {
@@ -13158,6 +13576,16 @@ extern "C" {
         physx::PxVec4& bary = reinterpret_cast<physx::PxVec4&>(*bary_pod);
         int32_t return_val = PxTetrahedronMeshExt::findTetrahedronClosestToPoint(mesh, point, bary);
         return return_val;
+    }
+
+    void PxDeformableSurfaceExt_copyToDevice(physx_PxDeformableSurface_Pod* deformableSurface_pod, uint32_t flags_pod, uint32_t nbVertices, physx_PxVec4_Pod* positionsPinned_pod, physx_PxVec4_Pod* velocitiesPinned_pod, physx_PxVec4_Pod* restPositionsPinned_pod, physx_CUstream_st_Pod* copyStream_pod) {
+        physx::PxDeformableSurface& deformableSurface = reinterpret_cast<physx::PxDeformableSurface&>(*deformableSurface_pod);
+        auto flags = physx::PxDeformableSurfaceDataFlags(flags_pod);
+        physx::PxVec4* positionsPinned = reinterpret_cast<physx::PxVec4*>(positionsPinned_pod);
+        physx::PxVec4* velocitiesPinned = reinterpret_cast<physx::PxVec4*>(velocitiesPinned_pod);
+        physx::PxVec4* restPositionsPinned = reinterpret_cast<physx::PxVec4*>(restPositionsPinned_pod);
+        physx::CUstream_st* copyStream = reinterpret_cast<physx::CUstream_st*>(copyStream_pod);
+        PxDeformableSurfaceExt::copyToDevice(deformableSurface, flags, nbVertices, positionsPinned, velocitiesPinned, restPositionsPinned, copyStream);
     }
 
     void PxDeformableSurfaceExt_distributeTriangleMassToVertices(physx_PxDeformableSurface_Pod* deformableSurface_pod, float const* triangleMasses, physx_PxVec4_Pod* positionInvMassPinned_pod) {
@@ -14878,6 +15306,15 @@ extern "C" {
     void PxVehicleConstraintConnector_onConstraintRelease_mut(physx_PxVehicleConstraintConnector_Pod* self__pod) {
         physx::PxVehicleConstraintConnector* self_ = reinterpret_cast<physx::PxVehicleConstraintConnector*>(self__pod);
         self_->onConstraintRelease();
+    }
+
+    bool PxVehicleConstraintConnector_updatePvdProperties(physx_PxVehicleConstraintConnector_Pod const* self__pod, physx_pvdsdk::PvdDataStream_Pod* pvdConnection_pod, physx_PxConstraint_Pod const* c_pod, int32_t updateType_pod) {
+        physx::PxVehicleConstraintConnector const* self_ = reinterpret_cast<physx::PxVehicleConstraintConnector const*>(self__pod);
+        physx::pvdsdk::PvdDataStream& pvdConnection = reinterpret_cast<physx::pvdsdk::PvdDataStream&>(*pvdConnection_pod);
+        physx::PxConstraint const* c = reinterpret_cast<physx::PxConstraint const*>(c_pod);
+        auto updateType = static_cast<physx::PxPvdUpdateType::Enum>(updateType_pod);
+        bool return_val = self_->updatePvdProperties(pvdConnection, c, updateType);
+        return return_val;
     }
 
     void PxVehicleConstraintConnector_updateOmniPvdProperties(physx_PxVehicleConstraintConnector_Pod const* self__pod) {

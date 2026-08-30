@@ -30,10 +30,10 @@ impl Context {
 
     fn add_sources(&mut self, rel_root: &str, files: &[&str]) -> &mut Self {
         let root = self.root.join(rel_root);
-        self.builder.files(files.iter().map(|src| {
+        self.builder.files(files.iter().filter_map(|src| {
             let mut p = root.join(src);
             p.set_extension("cpp");
-            p
+            p.exists().then_some(p)
         }));
 
         // Always add the src directory as an include as well
@@ -343,7 +343,7 @@ fn add_common(ctx: &mut Context) {
 
     let flags = if builder.get_compiler().is_like_clang() || builder.get_compiler().is_like_gnu() {
         vec![
-            "-std=c++14",
+            "-std=c++17",
             // Disable all warnings
             "-w",
             // Many reinterpret_cast tricks in physx break down if we do not disable strict-aliasing
@@ -373,7 +373,7 @@ fn add_common(ctx: &mut Context) {
             flags.push("/O2");
         }
 
-        flags.push("/std:c++14");
+        flags.push("/std:c++17");
 
         flags
     } else {
@@ -434,6 +434,8 @@ fn cc_compile(target_env: Environment) {
     simulationcontroller(&mut ctx);
 
     ctx.includes.push(ctx.root.join("source/pvd/include"));
+    ctx.includes
+        .push(ctx.root.join("source/lowleveldynamics/shared"));
 
     // Strip out duplicate include paths, C++ already has it hard enough as it is
     ctx.includes.sort();
@@ -522,9 +524,9 @@ fn main() {
     }
 
     physx_cc.flag(if physx_cc.get_compiler().is_like_msvc() {
-        "/std:c++14"
+        "/std:c++17"
     } else {
-        "-std=c++14"
+        "-std=c++17"
     });
 
     use std::ffi::OsString;

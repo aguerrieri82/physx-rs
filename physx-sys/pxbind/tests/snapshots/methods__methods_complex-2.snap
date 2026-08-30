@@ -3,14 +3,6 @@ source: physx-sys/pxbind/tests/methods.rs
 expression: mo.rust
 ---
 extern "C" {
-    /// Decrements the reference count of a shape and releases it if the new reference count is zero.
-    ///
-    /// Note that in releases prior to PhysX 3.3 this method did not have reference counting semantics and was used to destroy a shape
-    /// created with PxActor::createShape(). In PhysX 3.3 and above, this usage is deprecated, instead, use PxRigidActor::detachShape() to detach
-    /// a shape from an actor. If the shape to be detached was created with PxActor::createShape(), the actor holds the only counted reference,
-    /// and so when the shape is detached it will also be destroyed.
-    pub fn PxShape_release_mut(self_: *mut PxShape);
-
     /// Adjust the geometry of the shape.
     ///
     /// The type of the passed in geometry must match the geometry type of the shape.
@@ -49,14 +41,14 @@ extern "C" {
     ///
     /// Default:
     /// the identity transform
-    pub fn PxShape_setLocalPose_mut(self_: *mut PxShape, pose: *const PxTransform);
+    pub fn PxShape_setLocalPose_mut(self_: *mut PxShape, pose: *const PxTransformT<float>);
 
     /// Retrieves the pose of the shape in actor space, i.e. relative to the actor they are owned by.
     ///
     /// This transformation is identity by default.
     ///
     /// Pose of shape relative to the actor's frame.
-    pub fn PxShape_getLocalPose(self_: *const PxShape) -> PxTransform;
+    pub fn PxShape_getLocalPose(self_: *const PxShape) -> PxTransformT<float>;
 
     /// Sets the user definable collision filter data.
     ///
@@ -88,6 +80,22 @@ extern "C" {
     /// wake the associated actor up automatically.
     pub fn PxShape_setMaterials_mut(self_: *mut PxShape, materials: *const *mut PxMaterial, materialCount: u16);
 
+    /// Assigns surface deformable material(s) to the shape. Will remove existing materials from the shape.
+    ///
+    /// Sleeping:
+    /// Does
+    /// NOT
+    /// wake the associated actor up automatically.
+    pub fn PxShape_setDeformableSurfaceMaterials_mut(self_: *mut PxShape, materials: *const *mut PxDeformableSurfaceMaterial, materialCount: u16);
+
+    /// Assigns deformable volume material(s) to the shape. Will remove existing materials from the shape.
+    ///
+    /// Sleeping:
+    /// Does
+    /// NOT
+    /// wake the associated actor up automatically.
+    pub fn PxShape_setDeformableVolumeMaterials_mut(self_: *mut PxShape, materials: *const *mut PxDeformableVolumeMaterial, materialCount: u16);
+
     /// Returns the number of materials assigned to the shape.
     ///
     /// You can use [`getMaterials`]() to retrieve the material pointers.
@@ -104,6 +112,24 @@ extern "C" {
     /// Number of material pointers written to the buffer.
     pub fn PxShape_getMaterials(self_: *const PxShape, userBuffer: *mut *mut PxMaterial, bufferSize: u32, startIndex: u32) -> u32;
 
+    /// Retrieve all the surface deformable material pointers associated with the shape.
+    ///
+    /// You can retrieve the number of material pointers by calling [`getNbMaterials`]()
+    ///
+    /// Note: The returned data may contain invalid pointers if you release materials using [`PxMaterial::release`]().
+    ///
+    /// Number of material pointers written to the buffer.
+    pub fn PxShape_getDeformableSurfaceMaterials(self_: *const PxShape, userBuffer: *mut *mut PxDeformableSurfaceMaterial, bufferSize: u32, startIndex: u32) -> u32;
+
+    /// Retrieve all the deformable volume material pointers associated with the shape.
+    ///
+    /// You can retrieve the number of material pointers by calling [`getNbMaterials`]()
+    ///
+    /// Note: The returned data may contain invalid pointers if you release materials using [`PxMaterial::release`]().
+    ///
+    /// Number of material pointers written to the buffer.
+    pub fn PxShape_getDeformableVolumeMaterials(self_: *const PxShape, userBuffer: *mut *mut PxDeformableVolumeMaterial, bufferSize: u32, startIndex: u32) -> u32;
+
     /// Retrieve material from given triangle index.
     ///
     /// The input index is the internal triangle index as used inside the SDK. This is the index
@@ -111,7 +137,7 @@ extern "C" {
     ///
     /// This function is only useful for triangle meshes or heightfields, which have per-triangle
     /// materials. For other shapes or SDF triangle meshes, the function returns the single material
-    /// associated with the shape, regardless of the index.
+    /// associated with the	shape, regardless of the index.
     ///
     /// Material from input triangle
     ///
@@ -178,10 +204,15 @@ extern "C" {
 
     /// Sets torsional patch radius.
     ///
-    /// This defines the radius of the contact patch used to apply torsional friction. If the radius is 0, no torsional friction
-    /// will be applied. If the radius is > 0, some torsional friction will be applied. This is proportional to the penetration depth
-    /// so, if the shapes are separated or penetration is zero, no torsional friction will be applied. It is used to approximate
-    /// rotational friction introduced by the compression of contacting surfaces.
+    /// This defines the radius of the contact patch used to apply torsional friction. If the radius is 0 (and minTorsionalPatchRadius
+    /// is 0 too, see [`setMinTorsionalPatchRadius`]), no torsional friction will be applied. If the radius is > 0, some torsional friction
+    /// will be applied. This is proportional to the penetration depth so, if the shapes are separated or penetration is zero, no
+    /// torsional friction will be applied. It is used to approximate rotational friction introduced by the compression of contacting surfaces.
+    ///
+    /// Will only be active, if the friction patch has a single anchor point only. This is for example the case, if a contact patch
+    /// has a single contact point.
+    ///
+    /// Only supported in combination with solver type PxSolverType::eTGS.
     ///
     /// Default:
     /// 0.0
@@ -189,10 +220,7 @@ extern "C" {
 
     /// Gets torsional patch radius.
     ///
-    /// This defines the radius of the contact patch used to apply torsional friction. If the radius is 0, no torsional friction
-    /// will be applied. If the radius is > 0, some torsional friction will be applied. This is proportional to the penetration depth
-    /// so, if the shapes are separated or penetration is zero, no torsional friction will be applied. It is used to approximate
-    /// rotational friction introduced by the compression of contacting surfaces.
+    /// See [`setTorsionalPatchRadius`] for more info.
     ///
     /// The torsional patch radius of the shape.
     pub fn PxShape_getTorsionalPatchRadius(self_: *const PxShape) -> f32;
@@ -204,19 +232,25 @@ extern "C" {
     ///
     /// If the radius is > 0, some torsional friction will be applied regardless of the value of torsionalPatchRadius or the amount of penetration.
     ///
+    /// Will only be active in certain cases, see [`setTorsionalPatchRadius`] for details.
+    ///
     /// Default:
     /// 0.0
     pub fn PxShape_setMinTorsionalPatchRadius_mut(self_: *mut PxShape, radius: f32);
 
     /// Gets minimum torsional patch radius.
     ///
-    /// This defines the minimum radius of the contact patch used to apply torsional friction. If the radius is 0, the amount of torsional friction
-    /// that will be applied will be entirely dependent on the value of torsionalPatchRadius.
-    ///
-    /// If the radius is > 0, some torsional friction will be applied regardless of the value of torsionalPatchRadius or the amount of penetration.
+    /// See [`setMinTorsionalPatchRadius`] for more info.
     ///
     /// The minimum torsional patch radius of the shape.
     pub fn PxShape_getMinTorsionalPatchRadius(self_: *const PxShape) -> f32;
+
+    /// Returns the GPU shape index.
+    ///
+    /// This function only returns valid results if GPU dynamics is enabled.
+    ///
+    /// The GPU index, or 0xFFFFFFFF if the shape is not attached to a PxActor that is inserted into a PxScene.
+    pub fn PxShape_getGPUIndex(self_: *const PxShape) -> u32;
 
     /// Sets shape flags
     ///
@@ -257,4 +291,3 @@ extern "C" {
     pub fn PxShape_getConcreteTypeName(self_: *const PxShape) -> *const std::ffi::c_char;
 
 }
-

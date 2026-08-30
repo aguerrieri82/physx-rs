@@ -1,6 +1,6 @@
 ---
 source: physx-sys/pxbind/tests/enums.rs
-expression: "gen_enums(\"flags.h\",\n        &[\"PxActorCacheFlag\", \"PxArticulationCacheFlag\", \"PxShapeFlag\",\n                    \"PxArticulationSensorFlag\"]).unwrap()"
+expression: "gen_enums(\"flags.h\",\n&[\"PxActorCacheFlag\", \"PxArticulationCacheFlag\", \"PxShapeFlag\",\n\"PxArticulationSensorFlag\"]).unwrap()"
 ---
 /// These flags determine what data is read or written to the internal articulation data via cache.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -14,18 +14,24 @@ pub enum PxArticulationCacheFlag {
     Position = 4,
     /// The joint forces, see PxArticulationCache::jointForce.
     Force = 8,
-    /// The link velocities, see PxArticulationCache::linkVelocity.
+    /// The link velocities, see PxArticulationCache::linkVelocity. Link velocities cannot be set except for the root link velocity via  PxArticulationCache::rootLinkData.
     LinkVelocity = 16,
     /// The link accelerations, see PxArticulationCache::linkAcceleration.
     LinkAcceleration = 32,
-    /// Root link transform, see PxArticulationCache::rootLinkData.
+    /// The root link transform, see PxArticulationCache::rootLinkData.
     RootTransform = 64,
-    /// Root link velocities (read/write) and accelerations (read), see PxArticulationCache::rootLinkData.
+    /// The root link velocities (read/write) and accelerations (read), see PxArticulationCache::rootLinkData.
     RootVelocities = 128,
-    /// The spatial sensor forces, see PxArticulationCache::sensorForces.
-    SensorForces = 256,
-    /// Solver constraint joint forces, see PxArticulationCache::jointSolverForces.
-    JointSolverForces = 512,
+    /// The link incoming joint forces, see PxArticulationCache::linkIncomingJointForce.
+    LinkIncomingJointForce = 1024,
+    /// The joint target positions, see PxArticulationCache::jointTargetPositions.
+    JointTargetPositions = 2048,
+    /// The joint target velocities, see PxArticulationCache::jointTargetVelocities.
+    JointTargetVelocities = 4096,
+    /// The link forces, see PxArticulationCache::linkForce.
+    LinkForce = 8192,
+    /// The link torques, see PxArticulationCache::linkTorque.
+    LinkTorque = 16384,
     All = 247,
 }
 
@@ -42,32 +48,12 @@ bitflags::bitflags! {
         const LinkAcceleration = 1 << 5;
         const RootTransform = 1 << 6;
         const RootVelocities = 1 << 7;
-        const SensorForces = 1 << 8;
-        const JointSolverForces = 1 << 9;
+        const LinkIncomingJointForce = 1 << 10;
+        const JointTargetPositions = 1 << 11;
+        const JointTargetVelocities = 1 << 12;
+        const LinkForce = 1 << 13;
+        const LinkTorque = 1 << 14;
         const All = Self::Velocity.bits | Self::Acceleration.bits | Self::Position.bits | Self::LinkVelocity.bits | Self::LinkAcceleration.bits | Self::RootTransform.bits | Self::RootVelocities.bits;
-    }
-}
-
-/// Flags to configure the forces reported by articulation link sensors.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(i32)]
-pub enum PxArticulationSensorFlag {
-    /// Raise to receive forces from forward dynamics.
-    ForwardDynamicsForces = 1,
-    /// Raise to receive forces from constraint solver.
-    ConstraintSolverForces = 2,
-    /// Raise to receive forces in the world rotation frame, otherwise they will be reported in the sensor's local frame.
-    WorldFrame = 4,
-}
-
-bitflags::bitflags! {
-    /// Flags for [`PxArticulationSensorFlag`]
-    #[derive(Default)]
-    #[repr(transparent)]
-    pub struct PxArticulationSensorFlags: u8 {
-        const ForwardDynamicsForces = 1 << 0;
-        const ConstraintSolverForces = 1 << 1;
-        const WorldFrame = 1 << 2;
     }
 }
 
@@ -138,4 +124,3 @@ bitflags::bitflags! {
         const Visualization = 1 << 3;
     }
 }
-

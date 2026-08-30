@@ -348,7 +348,7 @@ impl<'ast> super::AstConsumer<'ast> {
             }
         }
 
-        let name = &td.name;
+        let name = super::canonical_float_template(&td.name).unwrap_or(&td.name);
         let (node, ast) = super::search(root, &|node: &Node| match &node.kind {
             Item::ClassTemplateSpecializationDecl(rec) | Item::CXXRecordDecl(rec) => {
                 (rec.name.as_deref() == Some(template_name)).then_some(rec)
@@ -386,6 +386,13 @@ impl<'ast> super::AstConsumer<'ast> {
                 log::debug!("skipping non-physx base class '{}'", base.kind.qual_type);
                 return None;
             };
+
+            // PxVec3/PxMat33 are typedefs of template specializations and are represented
+            // as builtins by pxbind rather than entries in `classes`. Their fields are
+            // synthesized when consuming the derived padded record below.
+            if matches!(base_name, "PxVec3" | "PxMat33") {
+                return None;
+            }
 
             let get = || {
                 let base_rec = self.classes.get(base_name).with_context(|| {
@@ -428,12 +435,22 @@ impl<'ast> super::AstConsumer<'ast> {
         // and exit
         let mut had_enums = false;
         let mut had_more = false;
+        let record_has_members = node.inner.iter().any(|inner| {
+            matches!(inner.kind, Item::FieldDecl { .. }) || inner.kind.as_method().is_some()
+        });
 
         for inn in &node.inner {
             match &inn.kind {
                 Item::FieldDecl { .. } => had_more = true,
                 kind if kind.as_method().is_some() => had_more = true,
                 Item::EnumDecl(decl) => {
+                    // A generic nested `Enum` cannot be represented uniquely
+                    // in the flat Rust namespace without renaming support.
+                    // Keep the enclosing record, but leave uses of this helper
+                    // type opaque/unsupported.
+                    if decl.name.as_deref() == Some("Enum") && record_has_members {
+                        continue;
+                    }
                     self.consume_enum(node, inn, decl)?;
                     had_enums = true;
                 }
@@ -448,6 +465,7 @@ impl<'ast> super::AstConsumer<'ast> {
         let Some(rname) = rec.name.as_deref() else {
             return Ok(());
         };
+        let rname = super::canonical_float_template(rname).unwrap_or(rname);
 
         anyhow::ensure!(
             rec.definition_data.is_some(),
@@ -455,15 +473,88 @@ impl<'ast> super::AstConsumer<'ast> {
         );
         let has_vtable = rec.is_polymorphic();
 
+        // Newer Clang versions print references to typedefs declared inside a
+        // class using only their local spelling (for example PxThreadImpl::Id
+        // is emitted as `Id`). Keep those aliases scoped to this record while
+        // parsing its fields and methods.
+        let mut local_type_defs: Vec<_> = node
+            .inner
+            .iter()
+            .filter_map(|inner| {
+                let td = match &inner.kind {
+                    Item::TypedefDecl(td) | Item::TypeAliasDecl(td) => td,
+                    _ => return None,
+                };
+                self.parse_type(&td.kind, &[])
+                    .ok()
+                    .map(|kind| (td.name.as_str(), super::TemplateArg::Type(kind)))
+            })
+            .collect();
+        for inner in &node.inner {
+            let Item::EnumDecl(decl) = &inner.kind else {
+                continue;
+            };
+            let Some(local_name) = decl.name.as_deref() else {
+                continue;
+            };
+            let qualified_name = format!("{rname}::{local_name}");
+            if let Some(binding) = self
+                .enums
+                .iter()
+                .rev()
+                .find(|binding| binding.cxx_qt == qualified_name)
+            {
+                local_type_defs.push((
+                    local_name,
+                    super::TemplateArg::Type(QualType::Enum {
+                        name: binding.name,
+                        cxx_qt: binding.cxx_qt,
+                        repr: binding.repr,
+                    }),
+                ));
+            }
+        }
+        let local_types: Vec<_> = local_type_defs
+            .iter()
+            .map(|(name, kind)| (*name, kind))
+            .collect();
+
         let mut is_public = !matches!(rec.tag_used, Some(Tag::Class));
 
         let mut fields = Vec::new();
+
+        for base in &rec.bases {
+            match base.kind.qual_type.as_str() {
+                "physx::PxVec3" => {
+                    for name in ["x", "y", "z"] {
+                        fields.push(FieldBinding {
+                            name,
+                            kind: QualType::Builtin(Builtin::Float),
+                            is_public: true,
+                            is_reference: false,
+                        });
+                    }
+                }
+                "physx::PxMat33" => {
+                    for name in ["column0", "column1", "column2"] {
+                        fields.push(FieldBinding {
+                            name,
+                            kind: QualType::Builtin(Builtin::Vec3),
+                            is_public: true,
+                            is_reference: false,
+                        });
+                    }
+                }
+                _ => {}
+            }
+        }
+
         for base_binding in self.iter_bases(rec) {
             let (_, base_binding) = base_binding?;
             fields.extend(base_binding.fields.iter().cloned());
         }
 
-        self.get_fields(node, rec, &[], &mut fields)?;
+        self.get_fields(node, rec, &local_types, &mut fields)?;
 
         // Keep a record of each method that we are binding, to account for
         // overloading, particularly constructors, we need to append a counter
@@ -603,7 +694,16 @@ impl<'ast> super::AstConsumer<'ast> {
                 ));
             }
 
-            self.consume_method(inn, method, &[], func)?;
+            if let Err(err) = self.consume_method(inn, method, &local_types, func) {
+                // Some newer APIs expose record-local helper and callback
+                // types. Those cannot be represented by pxbind's flat C ABI,
+                // so omit just that method instead of aborting generation for
+                // the whole SDK.
+                log::warn!(
+                    "skipping unsupported method {rname}::{}: {err:#}",
+                    method.name
+                );
+            }
         }
 
         // Check the fields to see if any records need to be forward declared
@@ -707,15 +807,31 @@ impl<'ast> super::AstConsumer<'ast> {
                             continue;
                         }
 
+                        if kind.qual_type.contains("(unnamed at ") {
+                            log::warn!("skipping anonymous field type {rname}::{name}");
+                            continue;
+                        }
+
                         // We've made modifications to the C++ code to deprecate
                         // fields that are using deprecated types
                         if Self::is_deprecated(inn) {
                             continue;
                         }
 
-                        let kind = self
-                            .parse_type(kind, template_types)
-                            .with_context(|| format!("failed to parse type for {rname}::{name}"))?;
+                        let kind = match self.parse_type(kind, template_types) {
+                            Ok(kind) => kind,
+                            Err(err) => {
+                                // Record-local helper types cannot be named in
+                                // pxbind's flat C ABI. Structgen still records
+                                // the enclosing type's complete size, so the
+                                // unsupported field can safely remain opaque.
+                                log::warn!(
+                                    "skipping unsupported field {rname}::{name} ({}): {err:#}",
+                                    kind.qual_type
+                                );
+                                continue;
+                            }
+                        };
 
                         // if matches!(&kind, QualType::FunctionPointer) {
                         //     continue;

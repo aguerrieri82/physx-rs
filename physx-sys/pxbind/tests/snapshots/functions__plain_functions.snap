@@ -3,49 +3,174 @@ source: physx-sys/pxbind/tests/functions.rs
 expression: mo.cpp
 ---
 extern "C" {
+    physx_PxFoundation_Pod* phys_PxCreateFoundation(uint32_t version, physx_PxAllocatorCallback_Pod* allocator_pod, physx_PxErrorCallback_Pod* errorCallback_pod) {
+        physx::PxAllocatorCallback& allocator = reinterpret_cast<physx::PxAllocatorCallback&>(*allocator_pod);
+        physx::PxErrorCallback& errorCallback = reinterpret_cast<physx::PxErrorCallback&>(*errorCallback_pod);
+        physx::PxFoundation* return_val = PxCreateFoundation(version, allocator, errorCallback);
+        auto return_val_pod = reinterpret_cast<physx_PxFoundation_Pod*>(return_val);
+        return return_val_pod;
+    }
+
+    void phys_PxSetFoundationInstance(physx_PxFoundation_Pod* foundation_pod) {
+        physx::PxFoundation& foundation = reinterpret_cast<physx::PxFoundation&>(*foundation_pod);
+        PxSetFoundationInstance(foundation);
+    }
+
+    physx_PxFoundation_Pod* phys_PxGetFoundation() {
+        physx::PxFoundation& return_val = PxGetFoundation();
+        auto return_val_pod = reinterpret_cast<physx_PxFoundation_Pod*>(&return_val);
+        return return_val_pod;
+    }
+
+    physx_PxFoundation_Pod* phys_PxIsFoundationValid() {
+        physx::PxFoundation* return_val = PxIsFoundationValid();
+        auto return_val_pod = reinterpret_cast<physx_PxFoundation_Pod*>(return_val);
+        return return_val_pod;
+    }
+
+    physx_PxProfilerCallback_Pod* phys_PxGetProfilerCallback() {
+        physx::PxProfilerCallback* return_val = PxGetProfilerCallback();
+        auto return_val_pod = reinterpret_cast<physx_PxProfilerCallback_Pod*>(return_val);
+        return return_val_pod;
+    }
+
+    void phys_PxSetProfilerCallback(physx_PxProfilerCallback_Pod* profiler_pod) {
+        physx::PxProfilerCallback* profiler = reinterpret_cast<physx::PxProfilerCallback*>(profiler_pod);
+        PxSetProfilerCallback(profiler);
+    }
+
+    physx_PxAllocatorCallback_Pod* phys_PxGetAllocatorCallback() {
+        physx::PxAllocatorCallback* return_val = PxGetAllocatorCallback();
+        auto return_val_pod = reinterpret_cast<physx_PxAllocatorCallback_Pod*>(return_val);
+        return return_val_pod;
+    }
+
+    physx_PxAllocatorCallback_Pod* phys_PxGetBroadcastAllocator(bool* reportAllocationNames) {
+        physx::PxAllocatorCallback* return_val = PxGetBroadcastAllocator(reportAllocationNames);
+        auto return_val_pod = reinterpret_cast<physx_PxAllocatorCallback_Pod*>(return_val);
+        return return_val_pod;
+    }
+
+    physx_PxErrorCallback_Pod* phys_PxGetErrorCallback() {
+        physx::PxErrorCallback* return_val = PxGetErrorCallback();
+        auto return_val_pod = reinterpret_cast<physx_PxErrorCallback_Pod*>(return_val);
+        return return_val_pod;
+    }
+
+    physx_PxErrorCallback_Pod* phys_PxGetBroadcastError() {
+        physx::PxErrorCallback* return_val = PxGetBroadcastError();
+        auto return_val_pod = reinterpret_cast<physx_PxErrorCallback_Pod*>(return_val);
+        return return_val_pod;
+    }
+
+    uint32_t phys_PxGetWarnOnceTimeStamp() {
+        uint32_t return_val = PxGetWarnOnceTimeStamp();
+        return return_val;
+    }
+
+    void phys_PxDecFoundationRefCount() {
+        PxDecFoundationRefCount();
+    }
+
+    void phys_PxIncFoundationRefCount() {
+        PxIncFoundationRefCount();
+    }
+
     physx_PxCollection_Pod* phys_PxCreateCollection() {
         physx::PxCollection* return_val = PxCreateCollection();
         auto return_val_pod = reinterpret_cast<physx_PxCollection_Pod*>(return_val);
         return return_val_pod;
     }
 
-    physx_PxAssertHandler_Pod* phys_PxGetAssertHandler() {
-        physx::PxAssertHandler& return_val = PxGetAssertHandler();
-        auto return_val_pod = reinterpret_cast<physx_PxAssertHandler_Pod*>(&return_val);
+    void phys_PxAssert(char const* exp, char const* file, int32_t line, bool* ignore_pod) {
+        bool& ignore = *ignore_pod;
+        PxAssert(exp, file, line, ignore);
+    }
+
+    void phys_PxSetRotX(physx_PxMat33_Pod* m_pod, float angle) {
+        physx::PxMat33& m = reinterpret_cast<physx::PxMat33&>(*m_pod);
+        PxSetRotX(m, angle);
+    }
+
+    void phys_PxSetRotY(physx_PxMat33_Pod* m_pod, float angle) {
+        physx::PxMat33& m = reinterpret_cast<physx::PxMat33&>(*m_pod);
+        PxSetRotY(m, angle);
+    }
+
+    void phys_PxSetRotZ(physx_PxMat33_Pod* m_pod, float angle) {
+        physx::PxMat33& m = reinterpret_cast<physx::PxMat33&>(*m_pod);
+        PxSetRotZ(m, angle);
+    }
+
+    physx_PxQuatT<float>_Pod phys_PxGetRotXQuat(float angle) {
+        physx::PxQuatT<float> return_val = PxGetRotXQuat(angle);
+        physx_PxQuatT<float>_Pod return_val_pod;
+        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
         return return_val_pod;
     }
 
-    void phys_PxSetAssertHandler(physx_PxAssertHandler_Pod* handler_pod) {
-        physx::PxAssertHandler& handler = reinterpret_cast<physx::PxAssertHandler&>(*handler_pod);
-        PxSetAssertHandler(handler);
+    physx_PxQuatT<float>_Pod phys_PxGetRotYQuat(float angle) {
+        physx::PxQuatT<float> return_val = PxGetRotYQuat(angle);
+        physx_PxQuatT<float>_Pod return_val_pod;
+        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
+        return return_val_pod;
     }
 
-    void* phys_PxMemZero(void* dest, uint32_t count) {
+    physx_PxQuatT<float>_Pod phys_PxGetRotZQuat(float angle) {
+        physx::PxQuatT<float> return_val = PxGetRotZQuat(angle);
+        physx_PxQuatT<float>_Pod return_val_pod;
+        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
+        return return_val_pod;
+    }
+
+    void* phys_PxMemZero(void* dest, size_t count_pod) {
+        size_t count;
+        memcpy(&count, &count_pod, sizeof(count));
         void* return_val = PxMemZero(dest, count);
         return return_val;
     }
 
-    void* phys_PxMemSet(void* dest, int32_t c, uint32_t count) {
+    void* phys_PxMemSet(void* dest, int32_t c, size_t count_pod) {
+        size_t count;
+        memcpy(&count, &count_pod, sizeof(count));
         void* return_val = PxMemSet(dest, c, count);
         return return_val;
     }
 
-    void* phys_PxMemCopy(void* dest, void const* src, uint32_t count) {
+    void* phys_PxMemCopy(void* dest, void const* src, size_t count_pod) {
+        size_t count;
+        memcpy(&count, &count_pod, sizeof(count));
         void* return_val = PxMemCopy(dest, src, count);
         return return_val;
     }
 
-    void* phys_PxMemMove(void* dest, void const* src, uint32_t count) {
+    void* phys_PxMemMove(void* dest, void const* src, size_t count_pod) {
+        size_t count;
+        memcpy(&count, &count_pod, sizeof(count));
         void* return_val = PxMemMove(dest, src, count);
         return return_val;
     }
 
-    void phys_PxMarkSerializedMemory(void* ptr, uint32_t byteSize) {
+    void phys_PxMarkSerializedMemory(void* ptr, size_t byteSize_pod) {
+        size_t byteSize;
+        memcpy(&byteSize, &byteSize_pod, sizeof(byteSize));
         PxMarkSerializedMemory(ptr, byteSize);
     }
 
-    uint32_t phys_PxCustomGeometry_getUniqueID() {
-        uint32_t return_val = PxCustomGeometry_getUniqueID();
+    int32_t phys_PxGetFilterObjectType(uint32_t attr) {
+        physx::PxFilterObjectType::Enum return_val = PxGetFilterObjectType(attr);
+        int32_t return_val_pod;
+        memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
+        return return_val_pod;
+    }
+
+    bool phys_PxFilterObjectIsKinematic(uint32_t attr) {
+        bool return_val = PxFilterObjectIsKinematic(attr);
+        return return_val;
+    }
+
+    bool phys_PxFilterObjectIsTrigger(uint32_t attr) {
+        bool return_val = PxFilterObjectIsTrigger(attr);
         return return_val;
     }
 
@@ -84,4 +209,3 @@ extern "C" {
     }
 
 }
-

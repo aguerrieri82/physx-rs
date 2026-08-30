@@ -311,7 +311,7 @@ struct RustIdent<'ast>(&'ast str);
 
 impl<'ast> fmt::Display for RustIdent<'ast> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        static KEYWORDS: &[&str] = &["box", "type", "ref"];
+        static KEYWORDS: &[&str] = &["box", "fn", "ref", "type"];
 
         f.write_str(self.0)?;
 

@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.15)
 
 project(physx-sys)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(PHYSX_SDK "../../../../libs/physx-141")
+set(PHYSX_SDK "../physx/physx")
 set(PHYSX_SDK_INCLUDE "${PHYSX_SDK}/include")
 	
 if (ANDROID_ABI STREQUAL  "arm64-v8a")
@@ -18,7 +18,7 @@ else()
 
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
 
-	set(PHYSX_SDK_LIB "${PHYSX_SDK}/bin/win-x64/mt/release")
+	set(PHYSX_SDK_LIB "${PHYSX_SDK}/lib/bin/win.x86_64.vc143.md/release")
 	
 	set(STRUCT_NAME "x86_64-pc-windows-msvc")
 
@@ -26,7 +26,6 @@ endif()
 
 set(SOURCES
     physx_api.cpp
-	structgen/structgen.cpp
 )
 	
 file(GLOB LIB_FILES 

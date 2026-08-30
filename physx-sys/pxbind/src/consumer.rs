@@ -91,6 +91,7 @@ pub enum Item {
         name: Option<String>,
     },
     ParagraphComment,
+    FullComment,
     /// The text part of a C++ comment
     TextComment {
         text: String,
@@ -131,13 +132,11 @@ pub enum Item {
     },
     ClassTemplateSpecializationDecl(Record),
     TypedefDecl(Typedef),
+    TypeAliasDecl(Typedef),
     /// The deprecated declspec has been defined on the item (PX_DEPRECATED)
     DeprecatedAttr,
     /// We don't care about other items
-    Other {
-        kind: Option<clang_ast::Kind>,
-        name: Option<String>,
-    },
+    Other,
 }
 
 impl fmt::Display for Item {
@@ -315,12 +314,18 @@ impl<'ast> AstConsumer<'ast> {
                     self.consume_record(inn, rec)
                         .with_context(|| format!("failed to consume {rec:?}"))?;
                 }
-                Item::TypedefDecl(td) if in_physx => {
+                Item::TypedefDecl(td) | Item::TypeAliasDecl(td) if in_physx => {
                     self.consume_typedef(inn, td, root)?;
                 }
                 Item::FunctionDecl(func) => {
                     if in_physx || (in_c && func.name.starts_with("Px")) {
-                        self.consume_function(inn, func, &[], in_c)?;
+                        if let Err(err) = self.consume_function(inn, func, &[], in_c) {
+                            // Public headers can expose optional subsystem
+                            // types (for example OmniPVD) outside the physx
+                            // namespace. They cannot be named by our flat C
+                            // ABI, so omit only the affected entry point.
+                            log::warn!("skipping unsupported function {}: {err:#}", func.name);
+                        }
                     }
                 }
                 Item::ClassTemplateDecl { .. } => {
@@ -392,15 +397,10 @@ impl<'ast> AstConsumer<'ast> {
 
     /// Walks the AST of a node and attempts to retrieve a comment for it
     fn get_comment(node: &Node) -> Option<Comment<'_>> {
-        let full_comment = node.inner.iter().find(|inner| {
-            matches!(
-                inner.kind,
-                Item::Other {
-                    kind: Some(clang_ast::Kind::FullComment),
-                    name: _,
-                }
-            )
-        })?;
+        let full_comment = node
+            .inner
+            .iter()
+            .find(|inner| matches!(inner.kind, Item::FullComment))?;
 
         fn gather<'ast>(
             node: &'ast Node,
@@ -496,6 +496,13 @@ impl<'ast> AstConsumer<'ast> {
             return Ok(QualType::Builtin(bi));
         }
 
+        // Clang's spelling of va_list is target-dependent. On Windows it is a
+        // typedef for char*, while Unix targets commonly expose an internal
+        // __va_list_tag record. It is only passed through the FFI here.
+        if type_str == "__va_list_tag" {
+            return Ok(QualType::Builtin(Builtin::Void));
+        }
+
         if type_str.contains("(*)") {
             return Ok(QualType::FunctionPointer);
         }
@@ -588,6 +595,20 @@ impl<'ast> AstConsumer<'ast> {
                 cxx_qt: type_str,
                 repr: *repr,
             })
+        } else if let Some(repr) = self.flags_map.get(type_str) {
+            Ok(QualType::Flags {
+                name: type_str,
+                repr: *repr,
+            })
+        } else if let Some(qt) = self.type_defs.get(type_str) {
+            Ok(qt.clone())
+        } else if self.classes.contains_key(type_str) {
+            Ok(QualType::Record { name: type_str })
+        } else if type_str.starts_with("Px") && !type_str.contains(['<', '>']) {
+            // Current Clang commonly prints types from the surrounding physx
+            // namespace without qualification, including a class's own type
+            // while that class is still being consumed.
+            Ok(QualType::Record { name: type_str })
         } else if let Some(name) = type_str.strip_prefix("physx::") {
             let qt = if let Some((repr, unqualified)) = self.enum_map.get(name) {
                 QualType::Enum {
@@ -608,6 +629,16 @@ impl<'ast> AstConsumer<'ast> {
             Ok(QualType::Record { name })
         } else if let Some(name) = type_str.strip_prefix("struct ") {
             Ok(QualType::Record { name })
+        } else if let AstType::Qualified(kind) = kind {
+            if let Some(desugared) = kind
+                .desugared_qual_type
+                .as_deref()
+                .filter(|desugared| *desugared != type_str)
+            {
+                self.parse_type(desugared, template_types)
+            } else {
+                anyhow::bail!("Unknown type '{kind:?}'")
+            }
         } else {
             anyhow::bail!("Unknown type '{kind:?}'");
         }
@@ -673,6 +704,8 @@ impl<'ast> AstType<'ast> {
             Self::Qualified(kind) => kind.qual_type.as_str(),
         };
 
+        let ty = canonical_float_template(ty).unwrap_or(ty);
+
         let ty = ty.strip_prefix("volatile ").unwrap_or(ty);
 
         // If the type is _not_ a pointer or reference, strip any const prefix
@@ -691,6 +724,22 @@ impl<'ast> AstType<'ast> {
 
         ty
     }
+}
+
+fn canonical_float_template(name: &str) -> Option<&'static str> {
+    Some(match name {
+        "PxVec2T<float>" => "PxVec2",
+        "PxVec3T<float>" => "PxVec3",
+        "PxVec4T<float>" => "PxVec4",
+        "PxQuatT<float>" => "PxQuat",
+        "PxMat33T<float>" => "PxMat33",
+        "PxMat34T<float>" => "PxMat34",
+        "PxMat44T<float>" => "PxMat44",
+        "PxTransformT<float>" => "PxTransform",
+        "PxBounds3T<float>" => "PxBounds3",
+        "PxPlaneT<float>" => "PxPlane",
+        _ => return None,
+    })
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]

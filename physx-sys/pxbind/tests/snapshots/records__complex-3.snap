@@ -3,9 +3,30 @@ source: physx-sys/pxbind/tests/records.rs
 expression: ro.rust_decls
 ---
 
+#[derive(Clone, Copy)]
+#[cfg_attr(feature = "debug-structs", derive(Debug))]
+#[repr(C)]
+pub struct PxInputStream {
+    vtable_: *const std::ffi::c_void,
+}
+
+#[derive(Clone, Copy)]
+#[cfg_attr(feature = "debug-structs", derive(Debug))]
+#[repr(C)]
+pub struct PxInputData {
+    vtable_: *const std::ffi::c_void,
+}
+
+#[derive(Clone, Copy)]
+#[cfg_attr(feature = "debug-structs", derive(Debug))]
+#[repr(C)]
+pub struct PxOutputStream {
+    vtable_: *const std::ffi::c_void,
+}
+
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxAllocatorCallback {
+pub struct PxAllocationListener {
     _unused: [u8; 0],
 }
 
@@ -17,63 +38,21 @@ pub struct PxErrorCallback {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxInputStream {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxInputData {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxOutputStream {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxVec2 {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxVec4 {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxMat34 {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxMat44 {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxPlane {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxBounds3 {
+pub struct PxAllocatorCallback {
     _unused: [u8; 0],
 }
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "debug-structs", derive(Debug))]
 #[repr(C)]
-pub struct PxAssertHandler {
+pub struct PxFoundation {
     vtable_: *const std::ffi::c_void,
+}
+
+#[derive(Copy, Clone)]
+#[repr(C)]
+pub struct PxProfilerCallback {
+    _unused: [u8; 0],
 }
 
 #[derive(Copy, Clone)]
@@ -136,37 +115,19 @@ pub struct PxMaterial {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxFEMSoftBodyMaterial {
+pub struct PxDeformableSurfaceMaterial {
     _unused: [u8; 0],
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxFEMClothMaterial {
+pub struct PxDeformableVolumeMaterial {
     _unused: [u8; 0],
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct PxPBDMaterial {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxFLIPMaterial {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxMPMMaterial {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxCustomMaterial {
     _unused: [u8; 0],
 }
 
@@ -280,49 +241,31 @@ pub struct PxPruningStructure {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxParticleSystem {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
 pub struct PxPBDParticleSystem {
     _unused: [u8; 0],
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxFLIPParticleSystem {
+pub struct PxDeformableSurface {
     _unused: [u8; 0],
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxMPMParticleSystem {
+pub struct PxDeformableVolume {
     _unused: [u8; 0],
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxCustomParticleSystem {
+pub struct PxDeformableAttachment {
     _unused: [u8; 0],
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct PxSoftBody {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxFEMCloth {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxHairSystem {
+pub struct PxDeformableElementFilter {
     _unused: [u8; 0],
 }
 
@@ -338,29 +281,11 @@ pub struct PxParticleAndDiffuseBuffer {
     _unused: [u8; 0],
 }
 
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxParticleClothBuffer {
-    _unused: [u8; 0],
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub struct PxParticleRigidBuffer {
-    _unused: [u8; 0],
-}
-
 #[derive(Clone, Copy)]
+#[cfg_attr(feature = "debug-structs", derive(Debug))]
 #[repr(C)]
-pub union Px1DConstraintMods {
-    pub spring: PxSpringModifiers,
-    pub bounce: PxRestitutionModifiers,
-}
-#[cfg(feature = "debug-structs")]
-impl std::fmt::Debug for Px1DConstraintMods {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Px1DConstraintMods")
-    }
+pub struct PxRefCounted {
+    vtable_: *const std::ffi::c_void,
 }
 
 #[derive(Clone, Copy)]
@@ -383,4 +308,3 @@ pub struct PxConstraintConnector {
 pub struct PxConstraintAllocator {
     vtable_: *const std::ffi::c_void,
 }
-

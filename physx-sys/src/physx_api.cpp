@@ -143,7 +143,7 @@ class RaycastFilterCallback : public PxQueryFilterCallback
         }
     }
 
-    virtual PxQueryHitType::Enum postFilter(const PxFilterData &, const PxQueryHit &)
+    virtual PxQueryHitType::Enum postFilter(const PxFilterData &, const PxQueryHit &, const PxShape *, const PxRigidActor *) override
     {
         return PxQueryHitType::eNONE;
     }
@@ -176,7 +176,7 @@ class RaycastFilterTrampoline : public PxQueryFilterCallback
         return sanitize_hit_type(mCallback(actor, &filterData, shape, (uint32_t)hitFlags, mUserData));
     }
 
-    virtual PxQueryHitType::Enum postFilter(const PxFilterData &, const PxQueryHit &)
+    virtual PxQueryHitType::Enum postFilter(const PxFilterData &, const PxQueryHit &, const PxShape *, const PxRigidActor *) override
     {
         return PxQueryHitType::eNONE;
     }
@@ -200,7 +200,7 @@ class RaycastFilterPrePostTrampoline : public PxQueryFilterCallback
 
     }
 
-    virtual PxQueryHitType::Enum postFilter(const PxFilterData &filterData, const PxQueryHit &hit)
+    virtual PxQueryHitType::Enum postFilter(const PxFilterData &filterData, const PxQueryHit &hit, const PxShape *, const PxRigidActor *) override
     {
         return sanitize_hit_type(mPostFilter(&filterData, &hit, mUserData));
     }
@@ -368,13 +368,13 @@ private:
 
 using AssertHandler = void (*)(const char* expr, const char* file, int line, bool* should_ignore, void* userdata);
 
-class AssertTrampoline : public PxAssertHandler {
+class AssertTrampoline {
 public:
     AssertTrampoline(AssertHandler onAssert, void* userdata)
         : mAssertHandler(onAssert), mUserdata(userdata)
 	{}
 
-	virtual void operator()(const char* exp, const char* file, int line, bool& ignore) override final {
+	void operator()(const char* exp, const char* file, int line, bool& ignore) {
         mAssertHandler(exp, file, line, &ignore, mUserdata);
     }
 
@@ -523,7 +523,7 @@ extern "C"
     }
 
 
-    PxAssertHandler *create_assert_handler(
+    void *create_assert_handler(
         AssertHandler on_assert,
         void* userdata
     ) {
@@ -568,7 +568,7 @@ extern "C"
 
 	// Not generated, used only for testing and examples!
     void PxAssertHandler_opCall_mut(physx_PxErrorCallback_Pod* self__pod, char const* expr, char const* file, int32_t line, bool* ignore ) {
-		physx::PxAssertHandler* self_ = reinterpret_cast<physx::PxAssertHandler*>(self__pod);
+		AssertTrampoline* self_ = reinterpret_cast<AssertTrampoline*>(self__pod);
 		(*self_)(expr, file, line, *ignore);
 	};
 }

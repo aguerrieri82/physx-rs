@@ -40,7 +40,7 @@ fn run_structgen(sg: String) -> anyhow::Result<StructgenOut> {
     let include_dir = pxbind::get_include_dir()?;
     cmd.args([
         "-fuse-ld=lld",
-        "-std=c++11",
+        "-std=c++17",
         "-fcolor-diagnostics",
         "-o",
         "structgen",

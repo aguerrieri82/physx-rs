@@ -3,6 +3,51 @@ source: physx-sys/pxbind/tests/functions.rs
 expression: mo.rust
 ---
 extern "C" {
+    /// Creates an instance of the foundation class
+    ///
+    /// The foundation class is needed to initialize higher level SDKs. There may be only one instance per process.
+    /// Calling this method after an instance has been created already will result in an error message and NULL will be
+    /// returned.
+    ///
+    /// Foundation instance on success, NULL if operation failed
+    pub fn phys_PxCreateFoundation(version: u32, allocator: *mut PxAllocatorCallback, errorCallback: *mut PxErrorCallback) -> *mut PxFoundation;
+
+    pub fn phys_PxSetFoundationInstance(foundation: *mut PxFoundation);
+
+    pub fn phys_PxGetFoundation() -> *mut PxFoundation;
+
+    /// Similar to PxGetFoundation() except it handles the case if the foundation was not created already.
+    ///
+    /// Pointer to the foundation if an instance is currently available, otherwise null.
+    pub fn phys_PxIsFoundationValid() -> *mut PxFoundation;
+
+    /// Get the callback that will be used for all profiling.
+    pub fn phys_PxGetProfilerCallback() -> *mut PxProfilerCallback;
+
+    /// Set the callback that will be used for all profiling.
+    pub fn phys_PxSetProfilerCallback(profiler: *mut PxProfilerCallback);
+
+    /// Get the allocator callback
+    pub fn phys_PxGetAllocatorCallback() -> *mut PxAllocatorCallback;
+
+    /// Get the broadcasting allocator callback
+    pub fn phys_PxGetBroadcastAllocator(reportAllocationNames: *mut bool) -> *mut PxAllocatorCallback;
+
+    /// Get the error callback
+    pub fn phys_PxGetErrorCallback() -> *mut PxErrorCallback;
+
+    /// Get the broadcasting error callback
+    pub fn phys_PxGetBroadcastError() -> *mut PxErrorCallback;
+
+    /// Get the warn once timestamp
+    pub fn phys_PxGetWarnOnceTimeStamp() -> u32;
+
+    /// Decrement the ref count of PxFoundation
+    pub fn phys_PxDecFoundationRefCount();
+
+    /// Increment the ref count of PxFoundation
+    pub fn phys_PxIncFoundationRefCount();
+
     /// Creates a collection object.
     ///
     /// Objects can only be serialized or deserialized through a collection.
@@ -12,40 +57,75 @@ extern "C" {
     /// The new collection object.
     pub fn phys_PxCreateCollection() -> *mut PxCollection;
 
-    pub fn phys_PxGetAssertHandler() -> *mut PxAssertHandler;
+    /// Built-in assert function
+    pub fn phys_PxAssert(exp: *const std::ffi::c_char, file: *const std::ffi::c_char, line: i32, ignore: *mut bool);
 
-    pub fn phys_PxSetAssertHandler(handler: *mut PxAssertHandler);
+    /// Sets a rotation matrix around the X axis.
+    pub fn phys_PxSetRotX(m: *mut PxMat33, angle: f32);
+
+    /// Sets a rotation matrix around the Y axis.
+    pub fn phys_PxSetRotY(m: *mut PxMat33, angle: f32);
+
+    /// Sets a rotation matrix around the Z axis.
+    pub fn phys_PxSetRotZ(m: *mut PxMat33, angle: f32);
+
+    /// Returns a rotation quaternion around the X axis.
+    ///
+    /// Quaternion that rotates around the desired axis
+    pub fn phys_PxGetRotXQuat(angle: f32) -> PxQuatT<float>;
+
+    /// Returns a rotation quaternion around the Y axis.
+    ///
+    /// Quaternion that rotates around the desired axis
+    pub fn phys_PxGetRotYQuat(angle: f32) -> PxQuatT<float>;
+
+    /// Returns a rotation quaternion around the Z axis.
+    ///
+    /// Quaternion that rotates around the desired axis
+    pub fn phys_PxGetRotZQuat(angle: f32) -> PxQuatT<float>;
 
     /// Sets the bytes of the provided buffer to zero.
     ///
     /// Pointer to memory block (same as input)
-    pub fn phys_PxMemZero(dest: *mut std::ffi::c_void, count: u32) -> *mut std::ffi::c_void;
+    pub fn phys_PxMemZero(dest: *mut std::ffi::c_void, count: usize) -> *mut std::ffi::c_void;
 
     /// Sets the bytes of the provided buffer to the specified value.
     ///
     /// Pointer to memory block (same as input)
-    pub fn phys_PxMemSet(dest: *mut std::ffi::c_void, c: i32, count: u32) -> *mut std::ffi::c_void;
+    pub fn phys_PxMemSet(dest: *mut std::ffi::c_void, c: i32, count: usize) -> *mut std::ffi::c_void;
 
     /// Copies the bytes of one memory block to another. The memory blocks must not overlap.
     ///
     /// Use [`PxMemMove`] if memory blocks overlap.
     ///
     /// Pointer to destination memory block
-    pub fn phys_PxMemCopy(dest: *mut std::ffi::c_void, src: *const std::ffi::c_void, count: u32) -> *mut std::ffi::c_void;
+    pub fn phys_PxMemCopy(dest: *mut std::ffi::c_void, src: *const std::ffi::c_void, count: usize) -> *mut std::ffi::c_void;
 
     /// Copies the bytes of one memory block to another. The memory blocks can overlap.
     ///
     /// Use [`PxMemCopy`] if memory blocks do not overlap.
     ///
     /// Pointer to destination memory block
-    pub fn phys_PxMemMove(dest: *mut std::ffi::c_void, src: *const std::ffi::c_void, count: u32) -> *mut std::ffi::c_void;
+    pub fn phys_PxMemMove(dest: *mut std::ffi::c_void, src: *const std::ffi::c_void, count: usize) -> *mut std::ffi::c_void;
 
     /// Mark a specified amount of memory with 0xcd pattern. This is used to check that the meta data
     /// definition for serialized classes is complete in checked builds.
-    pub fn phys_PxMarkSerializedMemory(ptr: *mut std::ffi::c_void, byteSize: u32);
+    pub fn phys_PxMarkSerializedMemory(ptr: *mut std::ffi::c_void, byteSize: usize);
 
-    /// For internal use
-    pub fn phys_PxCustomGeometry_getUniqueID() -> u32;
+    /// Extract filter object type from the filter attributes of a collision pair object
+    ///
+    /// The type of the collision pair object.
+    pub fn phys_PxGetFilterObjectType(attr: u32) -> PxFilterObjectType;
+
+    /// Specifies whether the collision object belongs to a kinematic rigid body
+    ///
+    /// True if the object belongs to a kinematic rigid body, else false
+    pub fn phys_PxFilterObjectIsKinematic(attr: u32) -> bool;
+
+    /// Specifies whether the collision object is a trigger shape
+    ///
+    /// True if the object is a trigger shape, else false
+    pub fn phys_PxFilterObjectIsTrigger(attr: u32) -> bool;
 
     pub fn phys_PxGetAggregateFilterHint(type_: PxAggregateType, enableSelfCollision: bool) -> u32;
 
@@ -60,14 +140,9 @@ extern "C" {
     /// There may be only one instance of this class per process. Calling this method after an instance
     /// has been created already will result in an error message and NULL will be returned.
     ///
-    /// Calling this will register all optional code modules (Articulations and HeightFields), preparing them for use.
-    /// If you do not need some of these modules, consider calling PxCreateBasePhysics() instead and registering needed
-    /// modules manually.
-    ///
     /// PxPhysics instance on success, NULL if operation failed
     pub fn phys_PxCreatePhysics(version: u32, foundation: *mut PxFoundation, scale: *const PxTolerancesScale, trackOutstandingAllocations: bool, pvd: *mut PxPvd, omniPvd: *mut PxOmniPvd) -> *mut PxPhysics;
 
     pub fn phys_PxGetPhysics() -> *mut PxPhysics;
 
 }
-

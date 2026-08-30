@@ -3,11 +3,6 @@ source: physx-sys/pxbind/tests/methods.rs
 expression: mo.cpp
 ---
 extern "C" {
-    void PxShape_release_mut(physx_PxShape_Pod* self__pod) {
-        physx::PxShape* self_ = reinterpret_cast<physx::PxShape*>(self__pod);
-        self_->release();
-    }
-
     void PxShape_setGeometry_mut(physx_PxShape_Pod* self__pod, physx_PxGeometry_Pod const* geometry_pod) {
         physx::PxShape* self_ = reinterpret_cast<physx::PxShape*>(self__pod);
         physx::PxGeometry const& geometry = reinterpret_cast<physx::PxGeometry const&>(*geometry_pod);
@@ -28,16 +23,16 @@ extern "C" {
         return return_val_pod;
     }
 
-    void PxShape_setLocalPose_mut(physx_PxShape_Pod* self__pod, physx_PxTransform_Pod const* pose_pod) {
+    void PxShape_setLocalPose_mut(physx_PxShape_Pod* self__pod, physx_PxTransformT<float>_Pod const* pose_pod) {
         physx::PxShape* self_ = reinterpret_cast<physx::PxShape*>(self__pod);
-        physx::PxTransform const& pose = reinterpret_cast<physx::PxTransform const&>(*pose_pod);
+        physx::PxTransformT<float> const& pose = reinterpret_cast<physx::PxTransformT<float> const&>(*pose_pod);
         self_->setLocalPose(pose);
     }
 
-    physx_PxTransform_Pod PxShape_getLocalPose(physx_PxShape_Pod const* self__pod) {
+    physx_PxTransformT<float>_Pod PxShape_getLocalPose(physx_PxShape_Pod const* self__pod) {
         physx::PxShape const* self_ = reinterpret_cast<physx::PxShape const*>(self__pod);
-        physx::PxTransform return_val = self_->getLocalPose();
-        physx_PxTransform_Pod return_val_pod;
+        physx::PxTransformT<float> return_val = self_->getLocalPose();
+        physx_PxTransformT<float>_Pod return_val_pod;
         memcpy(&return_val_pod, &return_val, sizeof(return_val_pod));
         return return_val_pod;
     }
@@ -76,6 +71,18 @@ extern "C" {
         self_->setMaterials(materials, materialCount);
     }
 
+    void PxShape_setDeformableSurfaceMaterials_mut(physx_PxShape_Pod* self__pod, physx_PxDeformableSurfaceMaterial_Pod* const* materials_pod, uint16_t materialCount) {
+        physx::PxShape* self_ = reinterpret_cast<physx::PxShape*>(self__pod);
+        physx::PxDeformableSurfaceMaterial* const* materials = reinterpret_cast<physx::PxDeformableSurfaceMaterial* const*>(materials_pod);
+        self_->setDeformableSurfaceMaterials(materials, materialCount);
+    }
+
+    void PxShape_setDeformableVolumeMaterials_mut(physx_PxShape_Pod* self__pod, physx_PxDeformableVolumeMaterial_Pod* const* materials_pod, uint16_t materialCount) {
+        physx::PxShape* self_ = reinterpret_cast<physx::PxShape*>(self__pod);
+        physx::PxDeformableVolumeMaterial* const* materials = reinterpret_cast<physx::PxDeformableVolumeMaterial* const*>(materials_pod);
+        self_->setDeformableVolumeMaterials(materials, materialCount);
+    }
+
     uint16_t PxShape_getNbMaterials(physx_PxShape_Pod const* self__pod) {
         physx::PxShape const* self_ = reinterpret_cast<physx::PxShape const*>(self__pod);
         uint16_t return_val = self_->getNbMaterials();
@@ -86,6 +93,20 @@ extern "C" {
         physx::PxShape const* self_ = reinterpret_cast<physx::PxShape const*>(self__pod);
         physx::PxMaterial** userBuffer = reinterpret_cast<physx::PxMaterial**>(userBuffer_pod);
         uint32_t return_val = self_->getMaterials(userBuffer, bufferSize, startIndex);
+        return return_val;
+    }
+
+    uint32_t PxShape_getDeformableSurfaceMaterials(physx_PxShape_Pod const* self__pod, physx_PxDeformableSurfaceMaterial_Pod** userBuffer_pod, uint32_t bufferSize, uint32_t startIndex) {
+        physx::PxShape const* self_ = reinterpret_cast<physx::PxShape const*>(self__pod);
+        physx::PxDeformableSurfaceMaterial** userBuffer = reinterpret_cast<physx::PxDeformableSurfaceMaterial**>(userBuffer_pod);
+        uint32_t return_val = self_->getDeformableSurfaceMaterials(userBuffer, bufferSize, startIndex);
+        return return_val;
+    }
+
+    uint32_t PxShape_getDeformableVolumeMaterials(physx_PxShape_Pod const* self__pod, physx_PxDeformableVolumeMaterial_Pod** userBuffer_pod, uint32_t bufferSize, uint32_t startIndex) {
+        physx::PxShape const* self_ = reinterpret_cast<physx::PxShape const*>(self__pod);
+        physx::PxDeformableVolumeMaterial** userBuffer = reinterpret_cast<physx::PxDeformableVolumeMaterial**>(userBuffer_pod);
+        uint32_t return_val = self_->getDeformableVolumeMaterials(userBuffer, bufferSize, startIndex);
         return return_val;
     }
 
@@ -151,6 +172,12 @@ extern "C" {
         return return_val;
     }
 
+    uint32_t PxShape_getGPUIndex(physx_PxShape_Pod const* self__pod) {
+        physx::PxShape const* self_ = reinterpret_cast<physx::PxShape const*>(self__pod);
+        uint32_t return_val = self_->getGPUIndex();
+        return return_val;
+    }
+
     void PxShape_setFlag_mut(physx_PxShape_Pod* self__pod, int32_t flag_pod, bool value) {
         physx::PxShape* self_ = reinterpret_cast<physx::PxShape*>(self__pod);
         auto flag = static_cast<physx::PxShapeFlag::Enum>(flag_pod);
@@ -195,4 +222,3 @@ extern "C" {
     }
 
 }
-
