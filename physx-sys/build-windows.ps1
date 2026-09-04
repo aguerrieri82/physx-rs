@@ -59,6 +59,7 @@ New-Item -ItemType Directory -Force -Path $PackageIncludes, $PackageLibraries | 
 Copy-Item -Path (Join-Path $SourceDirectory 'include/*') -Destination $PackageIncludes -Recurse -Force
 Copy-Item -Path (Join-Path $SourceLibraries '*.dll') -Destination $PackageLibraries -Force
 Copy-Item -Path (Join-Path $SourceLibraries '*.lib') -Destination $PackageLibraries -Force
+Copy-Item -Path (Join-Path $SourceLibraries '*.pdb') -Destination $PackageLibraries -Force
 
 $RequiredArtifacts = @(
     'PhysX_64.dll',

@@ -53,6 +53,13 @@ file(GLOB LIB_FILES
 
 add_library(MainLib SHARED ${SOURCES})
 
+# Keep full native symbols in Windows Release builds so crashes in physx-native.dll
+# can be resolved without changing the optimized runtime configuration.
+if(MSVC)
+	target_compile_options(MainLib PRIVATE /Zi)
+	target_link_options(MainLib PRIVATE /DEBUG:FULL)
+endif()
+
 target_include_directories(MainLib PUBLIC 
     ${PHYSX_SDK_INCLUDE}
     ${PHYSX_GENERATED_INCLUDES}
@@ -64,4 +71,6 @@ set_target_properties(MainLib PROPERTIES
 	WINDOWS_EXPORT_ALL_SYMBOLS ON
 	CXX_VISIBILITY_PRESET default
 	VISIBILITY_INLINES_HIDDEN OFF
-	OUTPUT_NAME "physxnative")
+	OUTPUT_NAME "physx-native"
+	PDB_NAME "physx-native"
+	PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
