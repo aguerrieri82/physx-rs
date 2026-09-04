@@ -62,7 +62,7 @@ use physx_sys::{
     PxPhysics_createPruningStructure_mut,
     PxPhysics_createRigidDynamic_mut,
     PxPhysics_createRigidStatic_mut,
-    PxPhysics_createShape_mut_1,
+    PxPhysics_createShape_mut_3,
     PxPhysics_createTriangleMesh_mut,
     PxPhysics_getBVHs,
     PxPhysics_getConvexMeshes,
@@ -464,7 +464,7 @@ pub trait Physics: Class<physx_sys::PxPhysics> + Sized {
     ) -> Option<Owner<Self::Shape>> {
         unsafe {
             Shape::from_raw(
-                PxPhysics_createShape_mut_1(
+                PxPhysics_createShape_mut_3(
                     self.as_mut_ptr(),
                     geometry.as_ptr(),
                     materials.as_ptr() as *const *mut _,

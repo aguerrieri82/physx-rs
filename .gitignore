@@ -9,4 +9,9 @@ Cargo.lock
 ast-dump.json
 /physx-sys/src/build-win
 /physx-sys/src/build-android
+
+# Reproducible PhysX SDK build and packaging output
+/physx-sys/build/
+/physx-sys/src/out-*/
+
 /.vs

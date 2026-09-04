@@ -5,7 +5,16 @@ project(physx-sys)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(PHYSX_SDK "../physx/physx")
+set(PHYSX_SDK "" CACHE PATH "Packaged PhysX SDK root")
+
+if(NOT PHYSX_SDK)
+	if(ANDROID)
+		set(PHYSX_SDK "../physx/physx")
+	else()
+		set(PHYSX_SDK "../../../../libs/physx-590")
+	endif()
+endif()
+
 set(PHYSX_SDK_INCLUDE "${PHYSX_SDK}/include")
 	
 if (ANDROID_ABI STREQUAL  "arm64-v8a")
@@ -18,10 +27,19 @@ else()
 
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
 
-	set(PHYSX_SDK_LIB "${PHYSX_SDK}/lib/bin/win.x86_64.vc143.md/release")
+	set(PHYSX_SDK_LIB "${PHYSX_SDK}/bin/win64-mt/release")
 	
 	set(STRUCT_NAME "x86_64-pc-windows-msvc")
 
+endif()
+
+if(PHYSX_GENERATED_DIR)
+	set(PHYSX_GENERATED_INCLUDES
+		"${PHYSX_GENERATED_DIR}"
+		"${PHYSX_GENERATED_DIR}/bindings")
+else()
+	set(PHYSX_GENERATED_INCLUDES
+		"${CMAKE_CURRENT_SOURCE_DIR}/generated/${STRUCT_NAME}")
 endif()
 
 set(SOURCES
@@ -37,10 +55,13 @@ add_library(MainLib SHARED ${SOURCES})
 
 target_include_directories(MainLib PUBLIC 
     ${PHYSX_SDK_INCLUDE}
-    ${CMAKE_CURRENT_SOURCE_DIR}/generated/${STRUCT_NAME}
+    ${PHYSX_GENERATED_INCLUDES}
 )
 
 target_link_libraries(MainLib PUBLIC ${LIB_FILES})
 
-set_target_properties(MainLib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-set_target_properties(MainLib PROPERTIES OUTPUT_NAME "physxnative")
+set_target_properties(MainLib PROPERTIES
+	WINDOWS_EXPORT_ALL_SYMBOLS ON
+	CXX_VISIBILITY_PRESET default
+	VISIBILITY_INLINES_HIDDEN OFF
+	OUTPUT_NAME "physxnative")

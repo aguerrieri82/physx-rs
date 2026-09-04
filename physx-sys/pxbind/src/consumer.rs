@@ -311,7 +311,7 @@ impl<'ast> AstConsumer<'ast> {
                         continue;
                     }
 
-                    self.consume_record(inn, rec)
+                    self.consume_record(inn, rec, None)
                         .with_context(|| format!("failed to consume {rec:?}"))?;
                 }
                 Item::TypedefDecl(td) | Item::TypeAliasDecl(td) if in_physx => {
@@ -328,8 +328,23 @@ impl<'ast> AstConsumer<'ast> {
                         }
                     }
                 }
-                Item::ClassTemplateDecl { .. } => {
-                    //self.consume_template_decl(inn, name)?;
+                Item::ClassTemplateDecl { .. } if in_physx => {
+                    for specialization in &inn.inner {
+                        let Item::ClassTemplateSpecializationDecl(rec) = &specialization.kind else {
+                            continue;
+                        };
+                        if specialization.inner.is_empty() || rec.definition_data.is_none() {
+                            continue;
+                        }
+                        let Some(alias) = builtin_template_alias(specialization, rec) else {
+                            continue;
+                        };
+                        if self.classes.contains_key(alias) {
+                            continue;
+                        }
+                        self.consume_record(specialization, rec, Some(alias))
+                            .with_context(|| format!("failed to consume {alias}"))?;
+                    }
                 }
                 Item::FunctionTemplateDecl => {}
                 Item::LinkageSpecDecl { language } if language == "C" => {
@@ -481,6 +496,18 @@ impl<'ast> AstConsumer<'ast> {
 
         let type_str = kind.as_str();
 
+        // CUDA declarations are visible in the public headers even for CPU-only
+        // builds, but their types are unavailable unless the CUDA SDK is present.
+        // Keep the public PVD API; pvdsdk is its private implementation namespace.
+        if type_str.contains("CUevent_st")
+            || type_str.contains("CUstream_st")
+            || type_str.contains("CUcontext_st")
+            || type_str.contains("pvdsdk::")
+            || type_str.contains("PxXmlMiscParameter")
+        {
+            anyhow::bail!("unsupported optional subsystem type '{type_str}'");
+        }
+
         if let Some(treplace) = template_types.iter().find_map(|(t, ty)| {
             if let (TemplateArg::Type(ty), true) = (ty, *t == type_str) {
                 Some(ty)
@@ -604,12 +631,17 @@ impl<'ast> AstConsumer<'ast> {
             Ok(qt.clone())
         } else if self.classes.contains_key(type_str) {
             Ok(QualType::Record { name: type_str })
-        } else if type_str.starts_with("Px") && !type_str.contains(['<', '>']) {
+        } else if type_str.starts_with("Px") && !type_str.contains(['<', '>', ':']) {
             // Current Clang commonly prints types from the surrounding physx
             // namespace without qualification, including a class's own type
             // while that class is still being consumed.
             Ok(QualType::Record { name: type_str })
         } else if let Some(name) = type_str.strip_prefix("physx::") {
+            let canonical = canonical_float_template(name);
+            if canonical.is_none() && name.contains(['<', '>']) {
+                anyhow::bail!("unsupported template type '{type_str}'");
+            }
+            let name = canonical.unwrap_or(name);
             let qt = if let Some((repr, unqualified)) = self.enum_map.get(name) {
                 QualType::Enum {
                     name: unqualified,
@@ -628,6 +660,8 @@ impl<'ast> AstConsumer<'ast> {
         } else if let Some(name) = type_str.strip_prefix("union ") {
             Ok(QualType::Record { name })
         } else if let Some(name) = type_str.strip_prefix("struct ") {
+            Ok(QualType::Record { name })
+        } else if let Some(name) = type_str.strip_prefix("class ") {
             Ok(QualType::Record { name })
         } else if let AstType::Qualified(kind) = kind {
             if let Some(desugared) = kind
@@ -679,6 +713,25 @@ fn no_physx(n: &str) -> &str {
     n.strip_prefix("physx::").unwrap_or(n)
 }
 
+fn builtin_template_alias(node: &Node, rec: &Record) -> Option<&'static str> {
+    let argument = node.inner.iter().find_map(|inner| match &inner.kind {
+        Item::TemplateArgument { kind: Some(kind), .. } => Some(kind.qual_type.as_str()),
+        _ => None,
+    })?;
+
+    Some(match (rec.name.as_deref()?, argument) {
+        ("PxVec2T", "float") => "PxVec2",
+        ("PxVec3T", "float") => "PxVec3",
+        ("PxVec3T", "double") => "PxExtendedVec3",
+        ("PxVec4T", "float") => "PxVec4",
+        ("PxQuatT", "float") => "PxQuat",
+        ("PxMat33T", "float") => "PxMat33",
+        ("PxMat44T", "float") => "PxMat44",
+        ("PxTransformT", "float") => "PxTransform",
+        _ => return None,
+    })
+}
+
 #[derive(Copy, Clone, Debug)]
 enum AstType<'ast> {
     Simple(&'ast str),
@@ -717,8 +770,6 @@ impl<'ast> AstType<'ast> {
         } else if ty.contains('*') {
             if let Some(stripped) = ty.strip_suffix("__restrict") {
                 return stripped;
-            } else if ty.starts_with("class ") {
-                return "void *";
             }
         }
 
@@ -738,6 +789,7 @@ fn canonical_float_template(name: &str) -> Option<&'static str> {
         "PxTransformT<float>" => "PxTransform",
         "PxBounds3T<float>" => "PxBounds3",
         "PxPlaneT<float>" => "PxPlane",
+        "PxVec3T<double>" => "PxExtendedVec3",
         _ => return None,
     })
 }
@@ -1044,6 +1096,17 @@ impl<'qt, 'ast> fmt::Display for CType<'qt, 'ast> {
 }
 
 impl<'ast> QualType<'ast> {
+    pub fn contains_function_pointer(&self) -> bool {
+        match self {
+            Self::FunctionPointer => true,
+            Self::Pointer { pointee, .. } | Self::Reference { pointee, .. } => {
+                pointee.contains_function_pointer()
+            }
+            Self::Array { element, .. } => element.contains_function_pointer(),
+            _ => false,
+        }
+    }
+
     #[inline]
     pub fn rust_type(&self) -> RustType<'_, 'ast> {
         RustType(self)

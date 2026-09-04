@@ -316,6 +316,7 @@ where
                 articulation_link_fn(unsafe { &mut *(self as *mut _ as *mut L) })
             }
             ActorType::RigidStatic => unreachable!("RigidStatic is not a RigidBody"),
+            _ => panic!("unsupported PhysX 5.9 actor type"),
         }
     }
 

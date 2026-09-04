@@ -6,7 +6,7 @@ use super::traits::Class;
 
 #[rustfmt::skip]
 use physx_sys::{
-    PxArticulationDrive,
+    PxArticulationDrive_new_2,
     PxArticulationJointReducedCoordinate_getJointType,
     PxArticulationJointReducedCoordinate_setDriveParams_mut,
     PxArticulationJointReducedCoordinate_setDriveTarget_mut,
@@ -89,11 +89,8 @@ impl ArticulationJointReducedCoordinate {
         max_force: f32,
         drive_type: ArticulationDriveType,
     ) {
-        let params = PxArticulationDrive {
-            stiffness,
-            damping,
-            maxForce: max_force,
-            driveType: drive_type,
+        let params = unsafe {
+            PxArticulationDrive_new_2(stiffness, damping, max_force, drive_type)
         };
 
         unsafe {

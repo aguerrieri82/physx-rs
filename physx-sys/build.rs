@@ -374,6 +374,9 @@ fn add_common(ctx: &mut Context) {
         }
 
         flags.push("/std:c++17");
+        // PhysX overloads class allocation without providing the C++17
+        // aligned-allocation overloads for all over-aligned classes.
+        flags.push("/Zc:alignedNew-");
 
         flags
     } else {
@@ -464,6 +467,22 @@ fn main() {
 
     let target = env::var("TARGET").expect("TARGET not specified");
     let host = env::var("HOST").expect("HOST not specified");
+    let output_dir_path =
+        PathBuf::from(env::var("OUT_DIR").expect("output directory not specified"));
+
+    let bindings_dir = output_dir_path.join("bindings");
+    let mut clang = std::process::Command::new("clang++");
+    let compiler_probe = cc::Build::new().cpp(true).target(&target).get_compiler();
+    for (key, value) in compiler_probe.env() {
+        clang.env(key, value);
+    }
+    pxbind::generate_bindings("physx/physx/include", &bindings_dir, clang)
+        .expect("failed to generate PhysX bindings from the checked-out headers");
+    // Let dependent binding generators consume the exact API and structure
+    // layout generated for this build instead of maintaining copied snapshots.
+    println!("cargo:bindings_dir={}", output_dir_path.display());
+
+    println!("cargo:rerun-if-changed=physx/physx/include");
 
     // Acquire the user-specified c++ compiler if one has been set, in the same
     // order and manner that cc-rs will do it
@@ -523,17 +542,18 @@ fn main() {
         physx_cc.compiler("clang++");
     }
 
-    physx_cc.flag(if physx_cc.get_compiler().is_like_msvc() {
-        "/std:c++17"
+    if physx_cc.get_compiler().is_like_msvc() {
+        physx_cc.flag("/std:c++17");
+        // PhysX classes provide custom allocation overloads without the
+        // corresponding C++17 aligned-allocation overloads.
+        physx_cc.flag("/Zc:alignedNew-");
     } else {
-        "-std=c++17"
-    });
+        physx_cc.flag("-std=c++17");
+    }
 
     use std::ffi::OsString;
-    let output_dir_path =
-        PathBuf::from(env::var("OUT_DIR").expect("output directory not specified"));
 
-    let include_path = if env::var("CARGO_FEATURE_STRUCTGEN").is_ok() {
+    let include_path = if target == host || env::var("CARGO_FEATURE_STRUCTGEN").is_ok() {
         let mut structgen_path = output_dir_path.join("structgen");
 
         // A bit hacky and might not work in all scenarios but qemu-aarch64 is not always
@@ -577,8 +597,14 @@ fn main() {
             cmd.arg("-o").arg(&structgen_path);
         }
 
-        cmd.arg("src/structgen/structgen.cpp");
-        cmd.status().expect("c++ compiler failed to execute");
+        cmd.arg(if structgen_compiler.is_like_msvc() {
+            "/Isrc/structgen"
+        } else {
+            "-Isrc/structgen"
+        });
+        cmd.arg(bindings_dir.join("structgen.cpp"));
+        let status = cmd.status().expect("c++ compiler failed to execute");
+        assert!(status.success(), "structgen compilation failed");
 
         // The above status check has been shown to fail, ie, the compiler
         // fails to output a binary, but reports success anyway
@@ -598,9 +624,10 @@ fn main() {
         };
 
         structgen.current_dir(&output_dir_path);
-        structgen.status().expect("structgen failed to execute, if you are cross compiling to aarch64 you need to have qemu-aarch64 installed");
+        let status = structgen.status().expect("structgen failed to execute, if you are cross compiling to aarch64 you need to have qemu-aarch64 installed");
+        assert!(status.success(), "structgen execution failed");
 
-        println!("cargo:rerun-if-changed=src/structgen/structgen.cpp");
+        println!("cargo:rerun-if-changed=pxbind/src");
         println!("cargo:rerun-if-changed=src/structgen/structgen.hpp");
 
         output_dir_path
@@ -617,6 +644,8 @@ fn main() {
             panic!("unknown TARGET triple '{}'", target);
         }
 
+        std::fs::copy(include.join("structgen.rs"), output_dir_path.join("structgen_out.rs"))
+            .expect("failed to stage the pre-generated cross-target Rust layout");
         include
     };
 
@@ -637,12 +666,11 @@ fn main() {
     }
 
     physx_cc
+        .include(&bindings_dir)
         .include(include_path)
         .file("src/physx_api.cpp")
         .compile("physx_api");
 
-    println!("cargo:rerun-if-changed=src/physx_generated.hpp");
-    println!("cargo:rerun-if-changed=src/physx_generated.rs");
     println!("cargo:rerun-if-changed=src/physx_api.cpp");
 
     // TODO: use the cloned git revision number instead

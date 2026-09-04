@@ -170,6 +170,7 @@ where
             ActorType::ArticulationLink => {
                 articulation_link_fn(unsafe { &*(self as *const _ as *const L) })
             }
+            _ => panic!("unsupported PhysX 5.9 actor type"),
         }
     }
 
@@ -197,6 +198,7 @@ where
             ActorType::ArticulationLink => {
                 articulation_link_fn(unsafe { &mut *(self as *mut _ as *mut L) })
             }
+            _ => panic!("unsupported PhysX 5.9 actor type"),
         }
     }
 

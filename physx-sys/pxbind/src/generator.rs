@@ -62,7 +62,25 @@ pub struct Generator {
 impl Default for Generator {
     fn default() -> Self {
         Self {
-            record_filter: Box::new(|_rb| true),
+            // These layouts are emitted by structgen's fixed POD prelude, but
+            // their methods are still generated from the concrete templates.
+            record_filter: Box::new(|rb| {
+                let name = match rb {
+                    RecBinding::Def(def) => def.name,
+                    RecBinding::Forward(forward) => forward.name,
+                };
+                !matches!(
+                    name,
+                    "PxVec2"
+                        | "PxVec3"
+                        | "PxExtendedVec3"
+                        | "PxVec4"
+                        | "PxQuat"
+                        | "PxMat33"
+                        | "PxMat44"
+                        | "PxTransform"
+                )
+            }),
             enum_filter: Box::new(|_eb| true),
             func_filter: Box::new(|_fb| true),
         }
@@ -150,7 +168,7 @@ impl Generator {
 
         for rec in ast.recs.iter().filter_map(|rb| {
             if let RecBinding::Def(def) = rb {
-                if (self.record_filter)(rb) {
+                if def.calc_layout && (self.record_filter)(rb) {
                     return Some(def);
                 }
             }

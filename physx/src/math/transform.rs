@@ -37,7 +37,7 @@ impl Default for PxTransform {
     fn default() -> Self {
         unsafe {
             Self {
-                obj: PxTransform_new_2(physx_sys::PxIDENTITY::PxIdentity),
+                obj: PxTransform_new_1(physx_sys::PxIDENTITY::PxIdentity),
             }
         }
     }
@@ -75,7 +75,7 @@ impl PxTransform {
     }
 
     pub fn from_translation(translation: &PxVec3) -> PxTransform {
-        unsafe { PxTransform_new_1(translation.as_ptr()).into() }
+        unsafe { PxTransform_new_2(translation.as_ptr()).into() }
     }
 
     pub fn from_rotation(rotation: &PxQuat) -> PxTransform {

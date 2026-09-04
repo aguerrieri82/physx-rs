@@ -147,6 +147,12 @@ impl<'ast> super::AstConsumer<'ast> {
         self.consume_return(&func.name, &func.kind.qual_type, template_types, &mut fb)?;
         self.consume_params(&func.name, node, template_types, &mut fb)?;
 
+        anyhow::ensure!(
+            !fb.params.iter().any(|param| param.kind.contains_function_pointer())
+                && !fb.ret.as_ref().is_some_and(QualType::contains_function_pointer),
+            "function pointers are not representable by the generated C ABI"
+        );
+
         self.funcs.push(fb);
         Ok(())
     }
@@ -167,6 +173,12 @@ impl<'ast> super::AstConsumer<'ast> {
 
         self.consume_return(&meth.name, &meth.kind.qual_type, template_types, &mut func)?;
         self.consume_params(&meth.name, node, template_types, &mut func)?;
+
+        anyhow::ensure!(
+            !func.params.iter().any(|param| param.kind.contains_function_pointer())
+                && !func.ret.as_ref().is_some_and(QualType::contains_function_pointer),
+            "function pointers are not representable by the generated C ABI"
+        );
 
         self.funcs.push(func);
 

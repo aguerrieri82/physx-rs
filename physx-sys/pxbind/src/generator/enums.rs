@@ -26,7 +26,11 @@ impl<'ast> EnumBinding<'ast> {
         writesln!(w, "{indent}#[repr({})]", self.repr.rust_type());
         writesln!(w, "{indent}pub enum {} {{", self.name);
 
+        let mut emitted_values = std::collections::BTreeSet::new();
         for var in &self.variants {
+            if !emitted_values.insert(var.value) {
+                continue;
+            }
             if let Some(com) = &var.comment {
                 com.emit_rust(w, level + 1);
             }
@@ -56,7 +60,11 @@ impl<'ast> EnumBinding<'ast> {
 
         let indentm = Indent(level + 3);
 
+        let mut emitted_values = std::collections::BTreeSet::new();
         for var in &self.variants {
+            if !emitted_values.insert(var.value) {
+                continue;
+            }
             writesln!(
                 w,
                 "{indentm}{} => Self::{},",

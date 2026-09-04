@@ -18,10 +18,10 @@ use physx_sys::{
     PxErrorCode,
     PxFoundation_getAllocatorCallback_mut,
     PxFoundation_getErrorCallback_mut,
-    PxFoundation_getErrorLevel,
+    phys_PxFoundation_getErrorLevelBits,
     PxFoundation_getReportAllocationNames,
     PxFoundation_release_mut,
-    PxFoundation_setErrorLevel_mut,
+    phys_PxFoundation_setErrorLevelBits,
     PxFoundation_setReportAllocationNames_mut,
 };
 use std::{
@@ -139,13 +139,13 @@ pub trait Foundation: Class<physx_sys::PxFoundation> + Sized {
 
     /// Set the error level.
     fn set_error_level(&mut self, mask: ErrorCodes) {
-        unsafe { PxFoundation_setErrorLevel_mut(self.as_mut_ptr(), mask.bits()) }
+        unsafe { phys_PxFoundation_setErrorLevelBits(self.as_mut_ptr(), mask.bits()) }
     }
 
     /// Get the error level.
     fn get_error_level(&self) -> ErrorCodes {
         unsafe {
-            ErrorCodes::from_bits(PxFoundation_getErrorLevel(self.as_ptr()))
+            ErrorCodes::from_bits(phys_PxFoundation_getErrorLevelBits(self.as_ptr()))
                 .expect("got invalid bits for error flags")
         }
     }

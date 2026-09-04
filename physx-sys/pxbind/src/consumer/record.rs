@@ -382,8 +382,14 @@ impl<'ast> super::AstConsumer<'ast> {
         rec: &'ast Record,
     ) -> impl Iterator<Item = anyhow::Result<(&ClassDef<'ast>, &RecBindingDef<'ast>)>> {
         rec.bases.iter().filter_map(|base| {
-            let Some(base_name) = base.kind.qual_type.strip_prefix("physx::") else {
-                log::debug!("skipping non-physx base class '{}'", base.kind.qual_type);
+            let base_name = if let Some(name) = base.kind.qual_type.strip_prefix("physx::") {
+                name
+            } else if base.kind.qual_type.starts_with("Px")
+                && !base.kind.qual_type.contains(['<', '>'])
+            {
+                &base.kind.qual_type
+            } else {
+                log::debug!("skipping unsupported base class '{}'", base.kind.qual_type);
                 return None;
             };
 
@@ -429,20 +435,21 @@ impl<'ast> super::AstConsumer<'ast> {
         &mut self,
         node: &'ast Node,
         rec: &'ast Record,
+        name_override: Option<&'ast str>,
     ) -> anyhow::Result<()> {
         // Do a quick check of the inner nodes, if we have an enumdecl, but no fields
         // or methods, this is just a wrapper around an enum and we can just emit the enum
         // and exit
         let mut had_enums = false;
-        let mut had_more = false;
+        let mut had_fields = false;
         let record_has_members = node.inner.iter().any(|inner| {
             matches!(inner.kind, Item::FieldDecl { .. }) || inner.kind.as_method().is_some()
         });
 
         for inn in &node.inner {
             match &inn.kind {
-                Item::FieldDecl { .. } => had_more = true,
-                kind if kind.as_method().is_some() => had_more = true,
+                Item::FieldDecl { .. } => had_fields = true,
+                kind if kind.as_method().is_some() => {}
                 Item::EnumDecl(decl) => {
                     // A generic nested `Enum` cannot be represented uniquely
                     // in the flat Rust namespace without renaming support.
@@ -458,11 +465,11 @@ impl<'ast> super::AstConsumer<'ast> {
             }
         }
 
-        if had_enums && !had_more {
+        if had_enums && !had_fields {
             return Ok(());
         }
 
-        let Some(rname) = rec.name.as_deref() else {
+        let Some(rname) = name_override.or(rec.name.as_deref()) else {
             return Ok(());
         };
         let rname = super::canonical_float_template(rname).unwrap_or(rname);
@@ -575,12 +582,6 @@ impl<'ast> super::AstConsumer<'ast> {
             // Ignore any method that isn't public, it's not part of the API we care about
             if let Some(method) = inn.kind.as_method() {
                 if !is_public {
-                    continue;
-                } else if method.kind.qual_type.contains('<') {
-                    log::debug!(
-                        "skipping `{rname}::{}` as it contains a templated parameter",
-                        method.name
-                    );
                     continue;
                 } else if Self::is_deprecated(inn) {
                     log::debug!("skipping deprecated method {rname}::{}", method.name);
@@ -716,7 +717,20 @@ impl<'ast> super::AstConsumer<'ast> {
                 if let QualType::Record { name } = &**pointee {
                     // Special case for PxTempAllocatorChunk which is an internal
                     // linked list
-                    if *name != rname && !self.classes.contains_key(name) {
+                    const BUILTIN_PODS: &[&str] = &[
+                        "PxVec2",
+                        "PxVec3",
+                        "PxExtendedVec3",
+                        "PxVec4",
+                        "PxQuat",
+                        "PxMat33",
+                        "PxMat44",
+                        "PxTransform",
+                    ];
+                    if *name != rname
+                        && !BUILTIN_PODS.contains(name)
+                        && !self.classes.contains_key(name)
+                    {
                         self.recs
                             .push(RecBinding::Forward(RecBindingForward { name }));
                         self.classes.insert(name, None);
@@ -799,11 +813,6 @@ impl<'ast> super::AstConsumer<'ast> {
                         // accounted for in our own padding calculations regardless
                         if kind.qual_type.starts_with("PxPadding<") {
                             log::debug!("skipping padding field");
-                            continue;
-                        }
-
-                        if kind.qual_type.contains('<') {
-                            log::debug!("skipping templated field {rname}::{name}");
                             continue;
                         }
 

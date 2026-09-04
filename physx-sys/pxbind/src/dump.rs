@@ -25,9 +25,20 @@ pub fn get_include_dir() -> anyhow::Result<String> {
 }
 
 pub fn get_ast(header: impl AsRef<std::path::Path>) -> anyhow::Result<Vec<u8>> {
-    let mut cmd = std::process::Command::new("clang++");
-
     let include_dir = get_include_dir()?;
+    get_ast_with_command(
+        header,
+        include_dir,
+        std::process::Command::new("clang++"),
+    )
+}
+
+pub fn get_ast_with_command(
+    header: impl AsRef<std::path::Path>,
+    include_dir: impl AsRef<std::path::Path>,
+    mut cmd: std::process::Command,
+) -> anyhow::Result<Vec<u8>> {
+    let include_dir = include_dir.as_ref();
 
     cmd.args([
         "-Xclang",
@@ -48,7 +59,7 @@ pub fn get_ast(header: impl AsRef<std::path::Path>) -> anyhow::Result<Vec<u8>> {
         // Add the root include directory so that clang knows how to find
         // all of the includes
         "-I",
-        &include_dir,
+        include_dir.as_os_str().to_str().context("non-UTF-8 include path")?,
         // Sigh, physx asserts that this is defined :p
         "-DNDEBUG",
     ]);
@@ -71,6 +82,20 @@ pub fn get_ast(header: impl AsRef<std::path::Path>) -> anyhow::Result<Vec<u8>> {
     );
 
     Ok(captured.stdout)
+}
+
+pub fn get_parsed_ast_with_command(
+    header: impl AsRef<std::path::Path>,
+    include_dir: impl AsRef<std::path::Path>,
+    cmd: std::process::Command,
+) -> anyhow::Result<(Node, Vec<u8>)> {
+    log::info!("Gathering AST via clang...");
+    let t = std::time::Instant::now();
+    let ast = get_ast_with_command(header, include_dir, cmd)?;
+    log::info!("Gathered AST in {}ms", t.elapsed().as_millis());
+
+    let root_node: Node = serde_json::from_slice(&ast).context("failed to parse AST")?;
+    Ok((root_node, ast))
 }
 
 /// Dump the AST of a header and all of its includes and parses it into a [`Node`]

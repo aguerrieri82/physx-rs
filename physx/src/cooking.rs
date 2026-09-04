@@ -147,7 +147,7 @@ pub enum ConvexMeshCookingResult {
 impl ConvexMeshCookingResult {
     fn from_raw(px_result: ConvRes, ptr: Option<Owner<ConvexMesh>>) -> Self {
         match px_result {
-            ConvRes::Success => {
+            ConvRes::Success | ConvRes::NonGpuCompatible => {
                 if let Some(ptr) = ptr {
                     Self::Success(ptr)
                 } else {
@@ -181,6 +181,7 @@ impl TriangleMeshCookingResult {
                 }
             }
             TriResult::LargeTriangle => Self::LargeTriangle,
+            TriResult::EmptyMesh => Self::Failure,
             TriResult::Failure => Self::Failure,
         }
     }

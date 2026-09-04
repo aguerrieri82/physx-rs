@@ -1,6 +1,6 @@
 #include "PxPhysicsAPI.h"
 #include <cstdint>
-#include "physx_generated.hpp"
+#include <physx_generated.hpp>
 
 PxDefaultAllocator gAllocator;
 PxDefaultErrorCallback gErrorCallback;
@@ -385,6 +385,18 @@ private:
 
 extern "C"
 {
+    void phys_PxFoundation_setErrorLevelBits(physx_PxFoundation_Pod* self_pod, uint32_t mask)
+    {
+        auto* self = reinterpret_cast<PxFoundation*>(self_pod);
+        self->setErrorLevel(static_cast<PxErrorCode::Enum>(mask));
+    }
+
+    uint32_t phys_PxFoundation_getErrorLevelBits(const physx_PxFoundation_Pod* self_pod)
+    {
+        auto* self = reinterpret_cast<const PxFoundation*>(self_pod);
+        return static_cast<uint32_t>(self->getErrorLevel());
+    }
+
     PxFoundation *physx_create_foundation()
     {
         return PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);

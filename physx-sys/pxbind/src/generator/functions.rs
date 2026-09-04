@@ -282,7 +282,11 @@ impl<'ast> PhysxInvoke<'ast> {
                 }
             }
             Self::New(class) => {
-                writes!(out, "{indent}auto {RET} = new physx::{}(", class);
+                if *class == "PxSocket" {
+                    writes!(out, "{indent}auto {RET} = PX_NEW(PxSocket)(");
+                } else {
+                    writes!(out, "{indent}auto {RET} = new physx::{class}(");
+                }
                 emit_args(out);
                 writes!(out, ");\n");
             }

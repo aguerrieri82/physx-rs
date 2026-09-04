@@ -134,60 +134,42 @@
     clippy::upper_case_acronyms
 )]
 
-#[cfg(feature = "structgen")]
 include!(concat!(env!("OUT_DIR"), "/structgen_out.rs"));
 
-#[cfg(all(
-    not(feature = "structgen"),
-    target_os = "linux",
-    target_arch = "x86_64",
-))]
-include!("generated/unix/structgen.rs");
+include!(concat!(env!("OUT_DIR"), "/bindings/physx_generated.rs"));
 
-#[cfg(all(
-    not(feature = "structgen"),
-    target_os = "linux",
-    target_arch = "aarch64",
-))]
-include!("generated/unix/structgen.rs");
+// Compatibility names retained for the existing high-level crate while the
+// C ABI follows the PhysX 5.9 API. These removed handles are pointer-only in
+// the old Rust type hierarchy.
+#[repr(C)]
+pub struct PxContactJoint {
+    _unused: [u8; 0],
+}
 
-#[cfg(all(
-    not(feature = "structgen"),
-    target_os = "android",
-    target_arch = "x86_64",
-))]
-include!("generated/unix/structgen.rs");
+#[repr(C)]
+pub struct PxCooking {
+    _unused: [u8; 0],
+}
 
-#[cfg(all(
-    not(feature = "structgen"),
-    target_os = "android",
-    target_arch = "aarch64",
-))]
-include!("generated/unix/structgen.rs");
+pub type PxgDynamicsMemoryConfig = PxGpuDynamicsMemoryConfig;
 
-#[cfg(all(
-    not(feature = "structgen"),
-    target_os = "macos",
-    target_arch = "x86_64",
-))]
-include!("generated/unix/structgen.rs");
+#[inline]
+pub unsafe fn PxgDynamicsMemoryConfig_new() -> PxgDynamicsMemoryConfig {
+    unsafe { PxGpuDynamicsMemoryConfig_new() }
+}
 
-#[cfg(all(
-    not(feature = "structgen"),
-    target_os = "macos",
-    target_arch = "aarch64",
-))]
-include!("generated/unix/structgen.rs");
+pub use PxArticulationReducedCoordinate_computeCoriolisCompensation
+    as PxArticulationReducedCoordinate_computeCoriolisAndCentrifugalForce;
+pub use PxArticulationReducedCoordinate_computeGravityCompensation
+    as PxArticulationReducedCoordinate_computeGeneralizedGravityForce;
+pub use PxArticulationReducedCoordinate_computeMassMatrix
+    as PxArticulationReducedCoordinate_computeGeneralizedMassMatrix;
 
-#[cfg(all(
-    not(feature = "structgen"),
-    target_os = "windows",
-    target_arch = "x86_64",
-    target_env = "msvc",
-))]
-include!("generated/x86_64-pc-windows-msvc/structgen.rs");
-
-include!("physx_generated.rs");
+// PhysX 5.9 no longer exposes the global assert-handler setter. Release
+// builds compile PhysX assertions out, so retain the source-level hook as a
+// no-op until a replacement exists upstream.
+#[inline]
+pub unsafe fn phys_PxSetAssertHandler(_handler: *mut PxAssertHandler) {}
 
 use std::ffi::c_void;
 
@@ -295,8 +277,17 @@ pub type ErrorCallback =
 
 pub type AssertHandler = unsafe extern "C" fn(*const i8, *const i8, u32, *mut bool, *const c_void);
 
+/// Opaque handle retained for compatibility with the removed PhysX assert-handler type.
+#[repr(C)]
+pub struct PxAssertHandler {
+    _unused: [u8; 0],
+}
+
 extern "C" {
     pub fn physx_create_foundation() -> *mut PxFoundation;
+
+    pub fn phys_PxFoundation_setErrorLevelBits(self_: *mut PxFoundation, mask: u32);
+    pub fn phys_PxFoundation_getErrorLevelBits(self_: *const PxFoundation) -> u32;
     pub fn physx_create_foundation_with_alloc(
         allocator: *mut PxDefaultAllocator,
     ) -> *mut PxFoundation;
